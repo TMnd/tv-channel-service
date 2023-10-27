@@ -1,2 +1,2 @@
 # tv-channel-service
-API to control my raspberry tv channel
+REST API to control my raspberry tv channel
