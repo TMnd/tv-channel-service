@@ -1,95 +1,50 @@
 -------------------------------------------------------------------------------
 Test set: pt.amaral.GreetingResourceTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 13.49 s <<< FAILURE! -- in pt.amaral.GreetingResourceTest
-pt.amaral.GreetingResourceTest.testHelloEndpoint -- Time elapsed: 0.040 s <<< ERROR!
-java.lang.RuntimeException: 
-java.lang.RuntimeException: io.quarkus.builder.BuildException: Build failure: Build failed due to errors
-	[error]: Build step io.quarkus.deployment.steps.CapabilityAggregationStep#aggregateCapabilities threw an exception: java.lang.IllegalStateException: Please make sure there is only one provider of the following capabilities:
-capability io.quarkus.rest is provided by:
-  - io.quarkus:quarkus-resteasy-reactive:3.5.0
-  - io.quarkus:quarkus-resteasy:3.5.0
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 21.78 s <<< FAILURE! -- in pt.amaral.GreetingResourceTest
+pt.amaral.GreetingResourceTest.testHelloEndpoint -- Time elapsed: 5.418 s <<< FAILURE!
+java.lang.AssertionError: 
+1 expectation failed.
+Expected status code <200> but was <404>.
 
-	at io.quarkus.deployment.steps.CapabilityAggregationStep.aggregateCapabilities(CapabilityAggregationStep.java:158)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at org.codehaus.groovy.reflection.CachedConstructor.invoke(CachedConstructor.java:73)
+	at org.codehaus.groovy.runtime.callsite.ConstructorSite$ConstructorSiteNoUnwrapNoCoerce.callConstructor(ConstructorSite.java:108)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallConstructor(CallSiteArray.java:57)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callConstructor(AbstractCallSite.java:263)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callConstructor(AbstractCallSite.java:277)
+	at io.restassured.internal.ResponseSpecificationImpl$HamcrestAssertionClosure.validate(ResponseSpecificationImpl.groovy:512)
+	at io.restassured.internal.ResponseSpecificationImpl$HamcrestAssertionClosure$validate$1.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:45)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:139)
+	at io.restassured.internal.ResponseSpecificationImpl.validateResponseIfRequired(ResponseSpecificationImpl.groovy:696)
+	at io.restassured.internal.ResponseSpecificationImpl.this$2$validateResponseIfRequired(ResponseSpecificationImpl.groovy)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
-	at io.quarkus.deployment.ExtensionLoader$3.execute(ExtensionLoader.java:849)
-	at io.quarkus.builder.BuildContext.run(BuildContext.java:282)
-	at org.jboss.threads.ContextHandler$1.runWith(ContextHandler.java:18)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
-	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
-	at java.base/java.lang.Thread.run(Thread.java:833)
-	at org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-	at io.quarkus.test.junit.QuarkusTestExtension.throwBootFailureException(QuarkusTestExtension.java:639)
-	at io.quarkus.test.junit.QuarkusTestExtension.interceptTestClassConstructor(QuarkusTestExtension.java:723)
-	at java.base/java.util.Optional.orElseGet(Optional.java:364)
+	at org.codehaus.groovy.runtime.callsite.PlainObjectMetaMethodSite.doInvoke(PlainObjectMetaMethodSite.java:43)
+	at org.codehaus.groovy.runtime.callsite.PogoMetaMethodSite$PogoCachedMethodSiteNoUnwrapNoCoerce.invoke(PogoMetaMethodSite.java:198)
+	at org.codehaus.groovy.runtime.callsite.PogoMetaMethodSite.callCurrent(PogoMetaMethodSite.java:62)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallCurrent(CallSiteArray.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:171)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:185)
+	at io.restassured.internal.ResponseSpecificationImpl.statusCode(ResponseSpecificationImpl.groovy:135)
+	at io.restassured.specification.ResponseSpecification$statusCode$0.callCurrent(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallCurrent(CallSiteArray.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:171)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:185)
+	at io.restassured.internal.ResponseSpecificationImpl.statusCode(ResponseSpecificationImpl.groovy:143)
+	at io.restassured.internal.ValidatableResponseOptionsImpl.statusCode(ValidatableResponseOptionsImpl.java:89)
+	at pt.amaral.GreetingResourceTest.testHelloEndpoint(GreetingResourceTest.java:17)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at io.quarkus.test.junit.QuarkusTestExtension.runExtensionMethod(QuarkusTestExtension.java:1014)
+	at io.quarkus.test.junit.QuarkusTestExtension.interceptTestMethod(QuarkusTestExtension.java:828)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-Caused by: java.lang.RuntimeException: io.quarkus.builder.BuildException: Build failure: Build failed due to errors
-	[error]: Build step io.quarkus.deployment.steps.CapabilityAggregationStep#aggregateCapabilities threw an exception: java.lang.IllegalStateException: Please make sure there is only one provider of the following capabilities:
-capability io.quarkus.rest is provided by:
-  - io.quarkus:quarkus-resteasy-reactive:3.5.0
-  - io.quarkus:quarkus-resteasy:3.5.0
-
-	at io.quarkus.deployment.steps.CapabilityAggregationStep.aggregateCapabilities(CapabilityAggregationStep.java:158)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
-	at io.quarkus.deployment.ExtensionLoader$3.execute(ExtensionLoader.java:849)
-	at io.quarkus.builder.BuildContext.run(BuildContext.java:282)
-	at org.jboss.threads.ContextHandler$1.runWith(ContextHandler.java:18)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
-	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
-	at java.base/java.lang.Thread.run(Thread.java:833)
-	at org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-	at io.quarkus.runner.bootstrap.AugmentActionImpl.runAugment(AugmentActionImpl.java:336)
-	at io.quarkus.runner.bootstrap.AugmentActionImpl.createInitialRuntimeApplication(AugmentActionImpl.java:253)
-	at io.quarkus.runner.bootstrap.AugmentActionImpl.createInitialRuntimeApplication(AugmentActionImpl.java:60)
-	at io.quarkus.test.junit.QuarkusTestExtension.doJavaStart(QuarkusTestExtension.java:223)
-	at io.quarkus.test.junit.QuarkusTestExtension.ensureStarted(QuarkusTestExtension.java:606)
-	at io.quarkus.test.junit.QuarkusTestExtension.beforeAll(QuarkusTestExtension.java:656)
-	... 1 more
-Caused by: io.quarkus.builder.BuildException: Build failure: Build failed due to errors
-	[error]: Build step io.quarkus.deployment.steps.CapabilityAggregationStep#aggregateCapabilities threw an exception: java.lang.IllegalStateException: Please make sure there is only one provider of the following capabilities:
-capability io.quarkus.rest is provided by:
-  - io.quarkus:quarkus-resteasy-reactive:3.5.0
-  - io.quarkus:quarkus-resteasy:3.5.0
-
-	at io.quarkus.deployment.steps.CapabilityAggregationStep.aggregateCapabilities(CapabilityAggregationStep.java:158)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
-	at io.quarkus.deployment.ExtensionLoader$3.execute(ExtensionLoader.java:849)
-	at io.quarkus.builder.BuildContext.run(BuildContext.java:282)
-	at org.jboss.threads.ContextHandler$1.runWith(ContextHandler.java:18)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
-	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
-	at java.base/java.lang.Thread.run(Thread.java:833)
-	at org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-	at io.quarkus.builder.Execution.run(Execution.java:123)
-	at io.quarkus.builder.BuildExecutionBuilder.execute(BuildExecutionBuilder.java:79)
-	at io.quarkus.deployment.QuarkusAugmentor.run(QuarkusAugmentor.java:160)
-	at io.quarkus.runner.bootstrap.AugmentActionImpl.runAugment(AugmentActionImpl.java:332)
-	... 6 more
-Caused by: java.lang.IllegalStateException: Please make sure there is only one provider of the following capabilities:
-capability io.quarkus.rest is provided by:
-  - io.quarkus:quarkus-resteasy-reactive:3.5.0
-  - io.quarkus:quarkus-resteasy:3.5.0
-
-	at io.quarkus.deployment.steps.CapabilityAggregationStep.aggregateCapabilities(CapabilityAggregationStep.java:158)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
-	at io.quarkus.deployment.ExtensionLoader$3.execute(ExtensionLoader.java:849)
-	at io.quarkus.builder.BuildContext.run(BuildContext.java:282)
-	at org.jboss.threads.ContextHandler$1.runWith(ContextHandler.java:18)
-	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
-	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
-	at java.base/java.lang.Thread.run(Thread.java:833)
-	at org.jboss.threads.JBossThread.run(JBossThread.java:501)
 

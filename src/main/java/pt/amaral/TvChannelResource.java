@@ -42,9 +42,29 @@ public class TvChannelResource {
         }
     }
 
-    //resume/play
+    @POST
+    @Path("next")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response Next() {
+        try {
+            tvController.sendCommand("next");
+            return Response.ok("Loading next video").build();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return Response.serverError().build();
+        }
+    }
 
-    //next
-
-    //prevx\
+    @POST
+    @Path("prev")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response Prev() {
+        try {
+            tvController.sendCommand("prev");
+            return Response.ok("Loading previous video").build();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return Response.serverError().build();
+        }
+    }
 }

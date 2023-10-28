@@ -1,3 +1,4 @@
 META-INF/panache-archive.marker
+pt/amaral/tasks/UpdateTvShows.class
 pt/amaral/utils/TvController.class
 pt/amaral/TvChannelResource.class
