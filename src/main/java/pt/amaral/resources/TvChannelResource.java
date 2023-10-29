@@ -1,4 +1,4 @@
-package pt.amaral;
+package pt.amaral.resources;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
@@ -67,4 +67,5 @@ public class TvChannelResource {
             return Response.serverError().build();
         }
     }
+
 }
