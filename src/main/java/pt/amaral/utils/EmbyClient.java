@@ -10,6 +10,7 @@ import pt.amaral.models.ShowType;
 import pt.amaral.models.TvShow;
 
 import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,30 +24,10 @@ public class EmbyClient {
 
     private final String EMBY_SERVER_HOST = "http://10.10.0.222:8096/emby/";
     private final String EMBY_SERVER_DEFAULT_USER_UUID = "87417e26999f4b218b4bfd5d5c862e8c";
-    private final String EMBY_ITEMS_GET_MOVIES_ITEMS_BY_CATEGORY = EMBY_SERVER_HOST + "/items?Fields=RunTimeTicks,OriginalTitle,MediaSources,Episode,Path&parentId=%s";
-    private final String EMBY_ITEMS_GET_SERIES_ITEMS_BY_CATEGORY = EMBY_SERVER_HOST + "/items?Recursive=true&fields=RunTimeTicks,MediaSources,Episode,Path&IncludeItemTypes=Episode&ParentId=%s";
-    private final String EMBY_ITEMS_USER_DATA = EMBY_SERVER_HOST + "/Users/%s/Items/%s";
+    private final String EMBY_GET_ITEMS_BY_CATEGORY = EMBY_SERVER_HOST + "/Users/" +EMBY_SERVER_DEFAULT_USER_UUID + "/items?Recursive=true&Fields=RunTimeTicks,path,MediaSources&ParentId=%S";
     private final Map<String, String> REQUEST_HEADER = Map.of(
         "X-Emby-Token", "82e539941c604904882403f7bd6e99ae"
     );
-    /*
-    private final String EMBY_ITEMS_GET_ALL = EMBY_SERVER_HOST+"Items?format=json&" +
-            "api_key="+EMBY_SERVER_API_KEY+
-            "&Recursive=true&IncludeItemTypes=Movie,Series&ExcludeLocationTypes=Virtual&" +
-            "Fields=AlternateMediaSources,Overview,RunTimeTicks,OriginalTitle,MediaSources,ProductionYear,Episode,Path&startIndex=0&" +
-            "CollapseBoxSetItems=false";
-    private final String EMBY_ITEMS_GET_DATA_SEASON = EMBY_SERVER_HOST+"Items?format=json&" +
-            "api_key="+EMBY_SERVER_API_KEY+
-            "&ParentId=%S&" +
-            "IncludeItemTypes=Episode&" +
-            "fields=Path,MediaSources,Season,Episode";
-
-    private final String EMBY_ITEMS_GET_EPISODES_DATA_BY_SEASON = EMBY_SERVER_HOST+"Items?format=json&" +
-            "api_key="+EMBY_SERVER_API_KEY+
-            "&ParentId=%S&" +
-            "IncludeItemTypes=Episode&" +
-            "fields=Path,MediaSources,Season,Episode,Path";
-*/
 
     public EmbyClient() {}
     
@@ -68,29 +49,11 @@ public class EmbyClient {
         return shows;
     }
 
-    public void processPlayState(Show show){
-
-        String url = String.format(EMBY_ITEMS_USER_DATA, EMBY_SERVER_DEFAULT_USER_UUID, show.getId());
-
-        try {
-            String response = httpClient.get(url,this.REQUEST_HEADER);
-
-            Map<String, Object> serilizedResponse = Helper.serilizeResponse(response);
-
-            Map<String, Object> userData = (Map<String, Object>) serilizedResponse.get("UserData");
-
-            show.setHasPlayed((Boolean) userData.get("Played"));
-
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     private List<Movie> processMovies() {
         List<Movie> movies = new ArrayList<>();
 
         try {
-            String url = String.format(EMBY_ITEMS_GET_MOVIES_ITEMS_BY_CATEGORY, ShowType.MOVIES.getCatrgoryID());
+            String url = String.format(EMBY_GET_ITEMS_BY_CATEGORY, ShowType.MOVIES.getCatrgoryID());
 
             List<Map<String, Object>> responseMovies = getSerializedResponse(url);
 
@@ -100,6 +63,8 @@ public class EmbyClient {
                 String path= String.valueOf(item.get("Path"));
                 Long timeAsMicroseconds = (Long) item.get("RunTimeTicks");
                 String type = String.valueOf(item.get("Type"));
+                Map<String, Object> userData = (Map<String, Object>) item.get("UserData");
+                String played = String.valueOf(userData.get("Played"));
 
                 Movie movie = new Movie(
                     id,
@@ -110,8 +75,7 @@ public class EmbyClient {
 
                 movie.setPath(path);
                 movie.setPath(type);
-
-                //processPlayState(id, movie);
+                movie.setHasPlayed(BooleanUtils.toBoolean(played));
 
                 movies.add(movie);
             }
@@ -124,7 +88,7 @@ public class EmbyClient {
     }
 
     private List<TvShow> processTvShows() throws IOException {
-        String url = String.format(EMBY_ITEMS_GET_SERIES_ITEMS_BY_CATEGORY,  ShowType.SERIES.getCatrgoryID());
+        String url = String.format(EMBY_GET_ITEMS_BY_CATEGORY,  ShowType.SERIES.getCatrgoryID());
 
         List<Map<String, Object>> episodes = getSerializedResponse(url);
 
@@ -138,6 +102,8 @@ public class EmbyClient {
             String path = String.valueOf(episode.get("Path"));
             String showName = String.valueOf(episode.get("SeriesName"));
             String season = String.valueOf(episode.get("ParentIndexNumber"));
+            Map<String, Object> userData = (Map<String, Object>) episode.get("UserData");
+            String played = String.valueOf(userData.get("Played"));
 
             TvShow tvShow = new TvShow(
                 id,
@@ -150,8 +116,7 @@ public class EmbyClient {
             tvShow.setEpisode(episodeNumber);
             tvShow.setPath(path);
             tvShow.setShowName(showName);
-
-           // processPlayState(id, tvShow);
+            tvShow.setHasPlayed(BooleanUtils.toBoolean(played));
 
             tvShowEpisodes.add(tvShow);
         }
