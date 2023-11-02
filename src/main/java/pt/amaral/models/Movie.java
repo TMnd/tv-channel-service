@@ -4,8 +4,8 @@ public class Movie extends Show{
 
     private String path;
 
-    public Movie(String name, Long timeAsMicroseconds, String type) {
-        super(name, timeAsMicroseconds, type);
+    public Movie(String id, String name, Long timeAsMicroseconds, String type) {
+        super(id, name, timeAsMicroseconds, type);
     }
 
     public String getPath() {
@@ -15,4 +15,5 @@ public class Movie extends Show{
     public void setPath(String path) {
         this.path = path;
     }
+
 }

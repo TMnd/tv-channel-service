@@ -1,14 +1,28 @@
 package pt.amaral.models;
 
+import java.time.ZonedDateTime;
+
 public class Show {
+    private String id;
     private String name;
     private Long timeAsMicroseconds;
     private String type;
+    private Boolean hasPlayed;
+    private ZonedDateTime lastTimeAir;
 
-    public Show(String name, Long timeAsMicroseconds, String type) {
+    public Show(String id, String name, Long timeAsMicroseconds, String type) {
+        this.id = id;
         this.name = name;
         this.timeAsMicroseconds = timeAsMicroseconds;
         this.type = type;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -33,5 +47,21 @@ public class Show {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Boolean getHasPlayed() {
+        return hasPlayed;
+    }
+
+    public void setHasPlayed(Boolean hasPlayed) {
+        this.hasPlayed = hasPlayed;
+    }
+
+    public ZonedDateTime getLastTimeAir() {
+        return lastTimeAir;
+    }
+
+    public void setLastTimeAir(ZonedDateTime lastTimeAir) {
+        this.lastTimeAir = lastTimeAir;
     }
 }

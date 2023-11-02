@@ -7,8 +7,8 @@ public class TvShow extends Show{
     private String path;
     private String showName;
 
-    public TvShow(String name, Long timeAsMicroseconds, String type) {
-        super(name, timeAsMicroseconds, type);
+    public TvShow(String id, String name, Long timeAsMicroseconds, String type) {
+        super(id, name, timeAsMicroseconds, type);
     }
 
     public String getEpisode() {

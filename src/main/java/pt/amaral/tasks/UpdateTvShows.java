@@ -2,7 +2,6 @@ package pt.amaral.tasks;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import io.quarkus.scheduler.Scheduled;
-import io.quarkus.scheduler.ScheduledExecution;
 import jakarta.inject.Inject;
 import pt.amaral.models.Movie;
 import pt.amaral.models.ShowType;
@@ -19,7 +18,7 @@ public class UpdateTvShows {
     @Inject
     EmbyClient embyClient;
 
-    @Scheduled(every="60s")
+    @Scheduled(every="120s")
     void teste() {
         try {
             Map<String, Object> shows = embyClient.executeShows();
@@ -27,13 +26,18 @@ public class UpdateTvShows {
             List<Movie> movies = (List<Movie>) shows.get(ShowType.MOVIES.toString());
             List<TvShow> tvShows = (List<TvShow>) shows.get(ShowType.SERIES.toString());
 
+            //TODO: TESTING AGAIN IN THE MERHOD WITH BIGGET SCHEDLER.
+
             for (Movie movie : movies) {
-                System.out.println(movie.getName() + " || " + movie.getTimeAsMicroseconds());
+                embyClient.processPlayState(movie);
+                System.out.println(movie.getName() + " || " + movie.getTimeAsMicroseconds() + " || " + movie.getHasPlayed());
             }
             System.out.println("-----------------------");
             for (TvShow tvShow : tvShows) {
-                System.out.println(tvShow.toString());
+                embyClient.processPlayState(tvShow);
+                System.out.println(tvShow.getName() + " || " + tvShow.getTimeAsMicroseconds() + " || " + tvShow.getHasPlayed());
             }
+            System.out.println("-----------------------");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

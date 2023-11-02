@@ -2,8 +2,10 @@ package pt.amaral.utils;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import pt.amaral.models.Movie;
+import pt.amaral.models.Show;
 import pt.amaral.models.ShowType;
 import pt.amaral.models.TvShow;
 
@@ -20,7 +22,14 @@ public class EmbyClient {
     HttpClient httpClient;
 
     private final String EMBY_SERVER_HOST = "http://10.10.0.222:8096/emby/";
-    private final String EMBY_SERVER_API_KEY = "82e539941c604904882403f7bd6e99ae";
+    private final String EMBY_SERVER_DEFAULT_USER_UUID = "87417e26999f4b218b4bfd5d5c862e8c";
+    private final String EMBY_ITEMS_GET_MOVIES_ITEMS_BY_CATEGORY = EMBY_SERVER_HOST + "/items?Fields=RunTimeTicks,OriginalTitle,MediaSources,Episode,Path&parentId=%s";
+    private final String EMBY_ITEMS_GET_SERIES_ITEMS_BY_CATEGORY = EMBY_SERVER_HOST + "/items?Recursive=true&fields=RunTimeTicks,MediaSources,Episode,Path&IncludeItemTypes=Episode&ParentId=%s";
+    private final String EMBY_ITEMS_USER_DATA = EMBY_SERVER_HOST + "/Users/%s/Items/%s";
+    private final Map<String, String> REQUEST_HEADER = Map.of(
+        "X-Emby-Token", "82e539941c604904882403f7bd6e99ae"
+    );
+    /*
     private final String EMBY_ITEMS_GET_ALL = EMBY_SERVER_HOST+"Items?format=json&" +
             "api_key="+EMBY_SERVER_API_KEY+
             "&Recursive=true&IncludeItemTypes=Movie,Series&ExcludeLocationTypes=Virtual&" +
@@ -37,12 +46,12 @@ public class EmbyClient {
             "&ParentId=%S&" +
             "IncludeItemTypes=Episode&" +
             "fields=Path,MediaSources,Season,Episode,Path";
-
+*/
 
     public EmbyClient() {}
     
     private List<Map<String, Object>> getSerializedResponse(String url) throws IOException {
-        String response = httpClient.get(url);
+        String response = httpClient.get(url,this.REQUEST_HEADER);
 
         Map<String, Object> responseSerialized = Helper.serilizeResponse(response);
 
@@ -50,102 +59,103 @@ public class EmbyClient {
     }
 
     public Map<String, Object> executeShows() throws IOException {
-        List<Map<String, Object>> items = getSerializedResponse(EMBY_ITEMS_GET_ALL);
 
         Map<String, Object> shows = new HashMap<>();
 
-        shows.put(ShowType.MOVIES.toString(), processMovies(items));
-        shows.put(ShowType.SERIES.toString(), processTvShows(items));
+        shows.put(ShowType.MOVIES.toString(), processMovies());
+        shows.put(ShowType.SERIES.toString(), processTvShows());
 
         return shows;
     }
 
-    private List<TvShow> processSeriesEpisode(String seasonId, String seasonIndex) throws IOException {
-        String url = String.format(EMBY_ITEMS_GET_EPISODES_DATA_BY_SEASON, seasonId);
-        List<Map<String, Object>> episodes = getSerializedResponse(url);
+    public void processPlayState(Show show){
 
-        List<TvShow> tvShowEpisodes = new ArrayList<>();
+        String url = String.format(EMBY_ITEMS_USER_DATA, EMBY_SERVER_DEFAULT_USER_UUID, show.getId());
 
-        for (Map<String, Object> episode : episodes) {
-            String name = String.valueOf(episode.get("Name"));
-            Long timeAsMicroseconds = (Long) episode.get("RunTimeTicks");
-            String episodeNumber = String.valueOf(episode.get("IndexNumber"));
-            String path = String.valueOf(episode.get("Path"));
-            String showName = String.valueOf(episode.get("SeriesName"));
+        try {
+            String response = httpClient.get(url,this.REQUEST_HEADER);
 
-            TvShow tvShow = new TvShow(
-                name,
-                timeAsMicroseconds,
-                ShowType.SERIES.toString()
-            );
+            Map<String, Object> serilizedResponse = Helper.serilizeResponse(response);
 
-            tvShow.setSeason(seasonIndex);
-            tvShow.setEpisode(episodeNumber);
-            tvShow.setPath(path);
-            tvShow.setShowName(showName);
+            Map<String, Object> userData = (Map<String, Object>) serilizedResponse.get("UserData");
 
-            tvShowEpisodes.add(tvShow);
+            show.setHasPlayed((Boolean) userData.get("Played"));
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
-
-        return tvShowEpisodes;
     }
 
-    private List<TvShow> processSeriesSeasons(String serieId) throws IOException {
-        String url = String.format(EMBY_ITEMS_GET_EPISODES_DATA_BY_SEASON, serieId);
-        List<Map<String, Object>> seasons = getSerializedResponse(url);
-
-        List<TvShow> allEpisodesFromSeries = new ArrayList<>();
-
-        for (Map<String, Object> season : seasons) {
-            String seasonNumber = String.valueOf(season.get("IndexNumber"));
-            String seriesParentId = String.valueOf(season.get("Id"));
-
-            List<TvShow> tvShows = processSeriesEpisode(seriesParentId, seasonNumber);
-            allEpisodesFromSeries.addAll(tvShows);
-        }
-
-        return allEpisodesFromSeries;
-    }
-
-    private List<Movie> processMovies(List<Map<String, Object>> items) {
+    private List<Movie> processMovies() {
         List<Movie> movies = new ArrayList<>();
 
-        for (Map<String, Object> item : items) {
-            String name= String.valueOf(item.get("Name"));
-            String path= String.valueOf(item.get("Path"));
-            Long timeAsMicroseconds = (Long) item.get("RunTimeTicks");
-            String type = String.valueOf(item.get("Type"));
+        try {
+            String url = String.format(EMBY_ITEMS_GET_MOVIES_ITEMS_BY_CATEGORY, ShowType.MOVIES.getCatrgoryID());
 
-            if(StringUtils.equals(type, ShowType.MOVIES.toString())) {
+            List<Map<String, Object>> responseMovies = getSerializedResponse(url);
+
+            for (Map<String, Object> item : responseMovies) {
+                String id = String.valueOf(item.get("Id"));
+                String name= String.valueOf(item.get("Name"));
+                String path= String.valueOf(item.get("Path"));
+                Long timeAsMicroseconds = (Long) item.get("RunTimeTicks");
+                String type = String.valueOf(item.get("Type"));
+
                 Movie movie = new Movie(
-                        name,
-                        timeAsMicroseconds,
-                        ShowType.MOVIES.toString()
+                    id,
+                    name,
+                    timeAsMicroseconds,
+                    ShowType.MOVIES.toString()
                 );
 
                 movie.setPath(path);
+                movie.setPath(type);
+
+                //processPlayState(id, movie);
 
                 movies.add(movie);
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+            //log error
         }
 
         return movies;
     }
 
-    private List<TvShow> processTvShows(List<Map<String, Object>> items) throws IOException {
-        List<TvShow> allEpisodes = new ArrayList<>();
+    private List<TvShow> processTvShows() throws IOException {
+        String url = String.format(EMBY_ITEMS_GET_SERIES_ITEMS_BY_CATEGORY,  ShowType.SERIES.getCatrgoryID());
 
-        for (Map<String, Object> item : items) {
-            String type = String.valueOf(item.get("Type"));
+        List<Map<String, Object>> episodes = getSerializedResponse(url);
 
-            if(StringUtils.equals(type, ShowType.SERIES.toString())) {
-                String seriesID = String.valueOf(item.get("Id"));
+        List<TvShow> tvShowEpisodes = new ArrayList<>();
 
-                List<TvShow> tvShows = processSeriesSeasons(seriesID);
-                allEpisodes.addAll(tvShows);
+        for (Map<String, Object> episode : episodes) {
+            String id = String.valueOf(episode.get("Id"));
+            String name = String.valueOf(episode.get("Name"));
+            Long timeAsMicroseconds = (Long) episode.get("RunTimeTicks");
+            String episodeNumber = String.valueOf(episode.get("IndexNumber"));
+            String path = String.valueOf(episode.get("Path"));
+            String showName = String.valueOf(episode.get("SeriesName"));
+            String season = String.valueOf(episode.get("ParentIndexNumber"));
 
-            }
+            TvShow tvShow = new TvShow(
+                id,
+                name,
+                timeAsMicroseconds,
+                ShowType.SERIES.toString()
+            );
+
+            tvShow.setSeason(season);
+            tvShow.setEpisode(episodeNumber);
+            tvShow.setPath(path);
+            tvShow.setShowName(showName);
+
+           // processPlayState(id, tvShow);
+
+            tvShowEpisodes.add(tvShow);
         }
-        return allEpisodes;
+
+        return tvShowEpisodes;
     }
 }
