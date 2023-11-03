@@ -9,7 +9,4 @@ import jakarta.persistence.Table;
 public class Configurations extends PanacheEntity {
     public String name;
     public String configuration;
-
-
-
 }

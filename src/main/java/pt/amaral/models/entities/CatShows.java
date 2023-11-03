@@ -7,7 +7,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "cat_shows")
 public class CatShows extends PanacheEntity {
-
     private String name;
     private Long duration;
     private String episode;
