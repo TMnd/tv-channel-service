@@ -11,10 +11,7 @@ import pt.amaral.models.TvShow;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ApplicationScoped
 public class EmbyClient {
@@ -24,7 +21,7 @@ public class EmbyClient {
 
     private final String EMBY_SERVER_HOST = "http://10.10.0.222:8096/emby/";
     private final String EMBY_SERVER_DEFAULT_USER_UUID = "87417e26999f4b218b4bfd5d5c862e8c";
-    private final String EMBY_GET_ITEMS_BY_CATEGORY = EMBY_SERVER_HOST + "/Users/" +EMBY_SERVER_DEFAULT_USER_UUID + "/items?Recursive=true&Fields=RunTimeTicks,path,MediaSources&ParentId=%S";
+    private final String EMBY_GET_ITEMS_BY_CATEGORY = EMBY_SERVER_HOST + "/Users/" +EMBY_SERVER_DEFAULT_USER_UUID + "/items?Recursive=true&IncludeItemTypes=%S&Fields=RunTimeTicks,path,MediaSources&ParentId=%S";
     private final Map<String, String> REQUEST_HEADER = Map.of(
         "X-Emby-Token", "82e539941c604904882403f7bd6e99ae"
     );
@@ -43,17 +40,18 @@ public class EmbyClient {
 
         Map<String, Object> shows = new HashMap<>();
 
-        shows.put(ShowType.MOVIES.toString(), processMovies());
+        shows.put(ShowType.MOVIES.toString(), processShows(ShowType.MOVIES));
+        shows.put(ShowType.DOCUMENTARY.toString(), processShows(ShowType.DOCUMENTARY));
         shows.put(ShowType.SERIES.toString(), processTvShows());
 
         return shows;
     }
 
-    private List<Movie> processMovies() {
+    private List<Movie> processShows(ShowType showType) {
         List<Movie> movies = new ArrayList<>();
 
         try {
-            String url = String.format(EMBY_GET_ITEMS_BY_CATEGORY, ShowType.MOVIES.getCatrgoryID());
+            String url = String.format(EMBY_GET_ITEMS_BY_CATEGORY, showType, showType.getCategoryID());
 
             List<Map<String, Object>> responseMovies = getSerializedResponse(url);
 
@@ -62,7 +60,6 @@ public class EmbyClient {
                 String name= String.valueOf(item.get("Name"));
                 String path= String.valueOf(item.get("Path"));
                 Long timeAsMicroseconds = (Long) item.get("RunTimeTicks");
-                String type = String.valueOf(item.get("Type"));
                 Map<String, Object> userData = (Map<String, Object>) item.get("UserData");
                 String played = String.valueOf(userData.get("Played"));
 
@@ -70,11 +67,10 @@ public class EmbyClient {
                     id,
                     name,
                     timeAsMicroseconds,
-                    ShowType.MOVIES.toString()
+                    showType.toString()
                 );
 
                 movie.setPath(path);
-                movie.setPath(type);
                 movie.setHasPlayed(BooleanUtils.toBoolean(played));
 
                 movies.add(movie);
@@ -87,8 +83,8 @@ public class EmbyClient {
         return movies;
     }
 
-    private List<TvShow> processTvShows() throws IOException {
-        String url = String.format(EMBY_GET_ITEMS_BY_CATEGORY,  ShowType.SERIES.getCatrgoryID());
+    private List<TvShow> processShowEpisodes(String id) throws IOException {
+        String url = String.format(EMBY_GET_ITEMS_BY_CATEGORY, ShowType.EPISODE, id);
 
         List<Map<String, Object>> episodes = getSerializedResponse(url);
 
@@ -106,10 +102,10 @@ public class EmbyClient {
             String played = String.valueOf(userData.get("Played"));
 
             TvShow tvShow = new TvShow(
-                id,
-                name,
-                timeAsMicroseconds,
-                ShowType.SERIES.toString()
+                    id,
+                    name,
+                    timeAsMicroseconds,
+                    ShowType.SERIES.toString()
             );
 
             tvShow.setSeason(season);
@@ -122,5 +118,23 @@ public class EmbyClient {
         }
 
         return tvShowEpisodes;
+    }
+
+    private List<TvShow> processTvShows() throws IOException {
+        String url = String.format(EMBY_GET_ITEMS_BY_CATEGORY, ShowType.SERIES, ShowType.SERIES.getCategoryID());
+
+        List<Map<String, Object>> shows = getSerializedResponse(url);
+
+        List<TvShow> allEpisodes = new ArrayList<>();
+
+        for (Map<String, Object> show : shows) {
+            String id = String.valueOf(show.get("Id"));
+
+            List<TvShow> tvShows = processShowEpisodes(id);
+
+            allEpisodes.addAll(tvShows);
+        }
+
+        return allEpisodes;
     }
 }

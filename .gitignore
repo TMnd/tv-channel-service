@@ -18,6 +18,8 @@
 *.tar.gz
 *.rar
 
+target/
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
@@ -34,6 +36,7 @@ hs_err_pid*
 .idea/**/sqlDataSources.xml
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
+.idea/**/*.xml
 
 # Gradle:
 .idea/**/gradle.xml
@@ -62,8 +65,6 @@ atlassian-ide-plugin.xml
 # Cursive Clojure plugin
 .idea/replstate.xml
 
-
-
 **/target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -76,3 +77,6 @@ buildNumber.properties
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
+./src/main/resources/application.properties
+
+\src\main\resources\application.properties

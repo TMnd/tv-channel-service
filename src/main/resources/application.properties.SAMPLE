@@ -1,0 +1,7 @@
+# Database
+quarkus.datasource.db-kind={{ DB_TYPE }}
+quarkus.datasource.username={{ DB_USER_NAME }}
+quarkus.datasource.password={{ DB_USER_PASSWORD }}
+
+quarkus.datasource.jdbc.url=jdbc:{{ DB_TYPE }}://{{ DB_HOST_URL }}/{{ DB_SCHEMA}}
+quarkus.datasource.jdbc.max-size=16
