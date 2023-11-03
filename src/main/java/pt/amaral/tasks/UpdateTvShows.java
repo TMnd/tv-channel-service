@@ -44,7 +44,7 @@ public class UpdateTvShows {
         return catShows;
     }
 
-    @Scheduled(cron="0 0 * * 3")
+    @Scheduled(cron="0 0 * * 3 ?")
     @Transactional
     void createShowsCatalog() {
         try {
