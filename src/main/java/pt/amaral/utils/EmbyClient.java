@@ -91,7 +91,6 @@ public class EmbyClient {
         List<TvShow> tvShowEpisodes = new ArrayList<>();
 
         for (Map<String, Object> episode : episodes) {
-            String id = String.valueOf(episode.get("Id"));
             String name = String.valueOf(episode.get("Name"));
             Long timeAsMicroseconds = (Long) episode.get("RunTimeTicks");
             String episodeNumber = String.valueOf(episode.get("IndexNumber"));

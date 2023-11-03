@@ -1,11 +1,14 @@
 package pt.amaral.tasks;
 
+import com.cronutils.validation.Cron;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import pt.amaral.models.Movie;
 import pt.amaral.models.ShowType;
 import pt.amaral.models.TvShow;
@@ -19,8 +22,6 @@ import java.util.Map;
 
 @ApplicationScoped
 public class UpdateTvShows {
-
-    //TODO: Create a weekly cron. Remove id from cat_config and make the episode name as a PK.
 
     private Integer DIVIDE_TICKS_TO_SECOND = 10000000;
 
@@ -43,7 +44,7 @@ public class UpdateTvShows {
         return catShows;
     }
 
-    @Scheduled(every="120s")
+    @Scheduled(cron="0 0 * * 3")
     @Transactional
     void createShowsCatalog() {
         try {

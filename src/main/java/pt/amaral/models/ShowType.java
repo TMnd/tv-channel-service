@@ -3,18 +3,19 @@ package pt.amaral.models;
 public enum ShowType {
     MOVIES("Movie", "3230"),
     SERIES("Series","4042"),
-    DOCUMENTARY("Documentary","5487");
+    DOCUMENTARY("Documentary","5487"),
+    EPISODE("Episode","");
 
     private String name;
-    private String catrgoryID;
+    private String categoryID;
 
     ShowType(String name, String categoryId) {
         this.name = name;
-        this.catrgoryID = categoryId;
+        this.categoryID = categoryId;
     }
 
-    public String getCatrgoryID(){
-        return this.catrgoryID;
+    public String getCategoryID(){
+        return this.categoryID;
     }
 
     @Override
