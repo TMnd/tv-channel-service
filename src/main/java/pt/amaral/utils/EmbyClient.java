@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import pt.amaral.AppConfiguration;
 import pt.amaral.models.Movie;
 import pt.amaral.models.Show;
 import pt.amaral.models.ShowType;
@@ -18,12 +19,12 @@ public class EmbyClient {
 
     @Inject
     HttpClient httpClient;
+    @Inject
+    AppConfiguration appConfiguration;
 
-    private final String EMBY_SERVER_HOST = "http://10.10.0.222:8096/emby/";
-    private final String EMBY_SERVER_DEFAULT_USER_UUID = "87417e26999f4b218b4bfd5d5c862e8c";
-    private final String EMBY_GET_ITEMS_BY_CATEGORY = EMBY_SERVER_HOST + "/Users/" +EMBY_SERVER_DEFAULT_USER_UUID + "/items?Recursive=true&IncludeItemTypes=%S&Fields=RunTimeTicks,path,MediaSources&ParentId=%S";
+    private final String EMBY_GET_ITEMS_BY_CATEGORY = appConfiguration.getEmbyServerHost() + "/Users/" + appConfiguration.getEmbyServerDefaultUserUUID() + "/items?Recursive=true&IncludeItemTypes=%S&Fields=RunTimeTicks,path,MediaSources&ParentId=%S";
     private final Map<String, String> REQUEST_HEADER = Map.of(
-        "X-Emby-Token", "82e539941c604904882403f7bd6e99ae"
+        "X-Emby-Token", appConfiguration.getEmbyServerApiToken()
     );
 
     public EmbyClient() {}

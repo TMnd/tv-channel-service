@@ -22,7 +22,7 @@ public class TvChannelResource {
     public Response Pause() {
         try {
             tvController.sendCommand("pause");
-                return Response.ok("Video paused").build();
+            return Response.ok("Video paused").build();
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return Response.serverError().build();

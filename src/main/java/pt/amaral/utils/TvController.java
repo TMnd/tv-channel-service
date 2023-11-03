@@ -1,6 +1,8 @@
 package pt.amaral.utils;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import pt.amaral.AppConfiguration;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,8 +17,11 @@ public class TvController {
     private final Integer VLC_ADDRESS_PORT = 4212;
     private final String VLC_ADDRESS_PASSWORD = "test";
 
+    @Inject
+    AppConfiguration appConfiguration;
+
     public void sendCommand(String command) throws IOException {
-        Socket socket = new Socket(VLC_ADDRESS_URL, VLC_ADDRESS_PORT);
+        Socket socket = new Socket(appConfiguration.getVlcAddress(), appConfiguration.getVlcPort());
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
@@ -27,7 +32,7 @@ public class TvController {
             }
         }
 
-        out.println(VLC_ADDRESS_PASSWORD);
+        out.println(appConfiguration.getVlcPassword());
 
         while ((response = in.readLine()) != null) {
             if (response.contains("Master")){

@@ -1,6 +1,5 @@
 package pt.amaral.tasks;
 
-import com.cronutils.validation.Cron;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -16,7 +15,6 @@ import pt.amaral.models.entities.CatShows;
 import pt.amaral.utils.EmbyClient;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
