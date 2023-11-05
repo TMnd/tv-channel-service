@@ -12,3 +12,15 @@ quarkus.flyway.baseline-version=1.0.0
 quarkus.flyway.baseline-description=Initial version
 quarkus.flyway.schemas={{DB_SCHEMA}}
 quarkus.flyway.table=flyway_{{DB_SCHEMA}}_history
+
+# Loging
+quarkus.log.level=INFO
+quarkus.log.min-level=DEBUG
+quarkus.log.category."pt.amaral".level=DEBUG
+
+quarkus.log.handler.gelf.enabled={{GELF_ENABLE}}
+quarkus.log.handler.gelf.host={{GELF_HOST}}
+quarkus.log.handler.gelf.port={{GELF_PORT}}
+quarkus.log.handler.gelf.facility=tvchannel_service_backend
+quarkus.log.handler.gelf.additional-field.service_version.value=1.0.0
+quarkus.log.handler.gelf.additional-field.service_version.type=String

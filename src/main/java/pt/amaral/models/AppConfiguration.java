@@ -1,9 +1,11 @@
-package pt.amaral;
+package pt.amaral.models;
 
-import jakarta.inject.Singleton;
+import jakarta.enterprise.context.ApplicationScoped;
 
-@Singleton
+@ApplicationScoped
 public class AppConfiguration {
+    private static final AppConfiguration instance = new AppConfiguration();
+
     private String embyServerHost;
     private String embyServerDefaultUserUUID;
     private String embyServerApiToken;
@@ -12,6 +14,10 @@ public class AppConfiguration {
     private String vlcPassword;
 
     public AppConfiguration() {}
+
+    public static AppConfiguration getInstance() {
+        return instance;
+    }
 
     public String getEmbyServerHost() {
         return embyServerHost;
@@ -59,5 +65,17 @@ public class AppConfiguration {
 
     public void setVlcPassword(String vlcPassword) {
         this.vlcPassword = vlcPassword;
+    }
+
+    @Override
+    public String toString() {
+        return "AppConfiguration{" +
+                "embyServerHost='" + embyServerHost + '\'' +
+                ", embyServerDefaultUserUUID='" + embyServerDefaultUserUUID + '\'' +
+                ", embyServerApiToken='" + embyServerApiToken + '\'' +
+                ", vlcAddress='" + vlcAddress + '\'' +
+                ", vlcPort=" + vlcPort +
+                ", vlcPassword='" + vlcPassword + '\'' +
+                '}';
     }
 }

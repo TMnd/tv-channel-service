@@ -3,15 +3,12 @@ package pt.amaral.utils;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
-import pt.amaral.AppConfiguration;
+import pt.amaral.models.AppConfiguration;
 import pt.amaral.models.Movie;
-import pt.amaral.models.Show;
 import pt.amaral.models.ShowType;
 import pt.amaral.models.TvShow;
 
 import java.io.IOException;
-import java.time.ZonedDateTime;
 import java.util.*;
 
 @ApplicationScoped
@@ -19,15 +16,18 @@ public class EmbyClient {
 
     @Inject
     HttpClient httpClient;
-    @Inject
-    AppConfiguration appConfiguration;
 
-    private final String EMBY_GET_ITEMS_BY_CATEGORY = appConfiguration.getEmbyServerHost() + "/Users/" + appConfiguration.getEmbyServerDefaultUserUUID() + "/items?Recursive=true&IncludeItemTypes=%S&Fields=RunTimeTicks,path,MediaSources&ParentId=%S";
-    private final Map<String, String> REQUEST_HEADER = Map.of(
+    private final String EMBY_GET_ITEMS_BY_CATEGORY;
+    private final Map<String, String> REQUEST_HEADER;
+
+    public EmbyClient() {
+        AppConfiguration appConfiguration = AppConfiguration.getInstance();
+
+        EMBY_GET_ITEMS_BY_CATEGORY = appConfiguration.getEmbyServerHost() + "/Users/" + appConfiguration.getEmbyServerDefaultUserUUID() + "/items?Recursive=true&IncludeItemTypes=%S&Fields=RunTimeTicks,path,MediaSources&ParentId=%S";
+        REQUEST_HEADER = Map.of(
         "X-Emby-Token", appConfiguration.getEmbyServerApiToken()
-    );
-
-    public EmbyClient() {}
+        );
+    }
     
     private List<Map<String, Object>> getSerializedResponse(String url) throws IOException {
         String response = httpClient.get(url,this.REQUEST_HEADER);

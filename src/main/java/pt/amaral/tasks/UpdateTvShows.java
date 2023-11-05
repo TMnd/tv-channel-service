@@ -2,6 +2,7 @@ package pt.amaral.tasks;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.inject.Inject;
@@ -29,7 +30,9 @@ public class UpdateTvShows {
     private void cleanShows(CatShows catShows) {
         PanacheQuery<PanacheEntityBase> all = catShows.findAll();
 
-        all.stream().forEach(PanacheEntityBase::delete);
+        if(CollectionUtils.isNotEmpty(all.list())){
+            all.stream().forEach(PanacheEntityBase::delete);
+        }
     }
 
     private CatShows createMoviesCatShows(Movie movie) {
@@ -42,22 +45,23 @@ public class UpdateTvShows {
         return catShows;
     }
 
-    @Scheduled(cron="0 0 * * 3 ?")
+//    @Scheduled(cron="0 0 * * 3 ?")
+    @Scheduled(every="200s")
     @Transactional
     void createShowsCatalog() {
+        Log.info("Updating the show catalog");
         try {
-            System.out.println("Fill the catalog shows");
             Map<String, Object> shows = embyClient.executeShows();
 
             List<Movie> movies = (List<Movie>) shows.get(ShowType.MOVIES.toString());
             List<TvShow> tvShows = (List<TvShow>) shows.get(ShowType.SERIES.toString());
             List<Movie> documentaries = (List<Movie>) shows.get(ShowType.DOCUMENTARY.toString());
 
-            System.out.println("Clean table from exisiting data");
+            Log.debug("Clean the table from existing data.");
             CatShows catShows = new CatShows();
             cleanShows(catShows);
 
-            System.out.println("Insert movies");
+            Log.debug("Insert movies");
 
             if(CollectionUtils.isNotEmpty(movies)) {
                 for (Movie movie : movies) {
@@ -69,7 +73,7 @@ public class UpdateTvShows {
                 }
             }
 
-            System.out.println("Insert series");
+            Log.debug("Insert series");
 
             if(CollectionUtils.isNotEmpty(tvShows)) {
                 for (TvShow tvShow : tvShows) {
@@ -87,7 +91,7 @@ public class UpdateTvShows {
                 }
             }
 
-            System.out.println("Insert Documentary");
+            Log.debug("Insert documentaries");
 
             if(CollectionUtils.isNotEmpty(documentaries)) {
                 for (Movie movie : documentaries) {
@@ -99,8 +103,10 @@ public class UpdateTvShows {
                 }
             }
 
+            Log.info("Updating done");
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Log.error("Fail to update show catalog", e);
         }
     }
 }

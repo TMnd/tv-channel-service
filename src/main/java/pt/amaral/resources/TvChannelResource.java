@@ -1,12 +1,13 @@
 package pt.amaral.resources;
 
+import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import pt.amaral.utils.TvController;
+import pt.amaral.service.TvControllerService;
 
 import java.io.IOException;
 
@@ -14,7 +15,7 @@ import java.io.IOException;
 public class TvChannelResource {
 
     @Inject
-    TvController tvController;
+    TvControllerService tvController;
 
     @POST
     @Path("pause")
@@ -24,7 +25,7 @@ public class TvChannelResource {
             tvController.sendCommand("pause");
             return Response.ok("Video paused").build();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            Log.error(e.getMessage());
             return Response.serverError().build();
         }
     }
@@ -37,7 +38,7 @@ public class TvChannelResource {
             tvController.sendCommand("play");
             return Response.ok("Video resumed").build();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            Log.error(e.getMessage());
             return Response.serverError().build();
         }
     }
@@ -50,7 +51,7 @@ public class TvChannelResource {
             tvController.sendCommand("next");
             return Response.ok("Loading next video").build();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            Log.error(e.getMessage());
             return Response.serverError().build();
         }
     }
@@ -63,7 +64,7 @@ public class TvChannelResource {
             tvController.sendCommand("prev");
             return Response.ok("Loading previous video").build();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            Log.error(e.getMessage());
             return Response.serverError().build();
         }
     }

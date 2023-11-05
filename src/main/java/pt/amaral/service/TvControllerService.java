@@ -1,8 +1,7 @@
-package pt.amaral.utils;
+package pt.amaral.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import pt.amaral.AppConfiguration;
+import pt.amaral.models.AppConfiguration;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,14 +10,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 @ApplicationScoped
-public class TvController {
+public class TvControllerService {
 
-    private final String VLC_ADDRESS_URL = "localhost";
-    private final Integer VLC_ADDRESS_PORT = 4212;
-    private final String VLC_ADDRESS_PASSWORD = "test";
-
-    @Inject
-    AppConfiguration appConfiguration;
+    private final AppConfiguration appConfiguration = AppConfiguration.getInstance();
 
     public void sendCommand(String command) throws IOException {
         Socket socket = new Socket(appConfiguration.getVlcAddress(), appConfiguration.getVlcPort());
