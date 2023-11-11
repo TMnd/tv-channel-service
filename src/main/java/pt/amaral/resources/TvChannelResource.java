@@ -84,7 +84,7 @@ public class TvChannelResource {
         try {
             ShowResult showResult = tvControllerService.selectRandomShow(time);
             Log.info("Show selected: " + showResult.getName());
-            return Response.ok().build();
+            return Response.ok(showResult).build();
         } catch (RandomizeFailError e) {
             Log.error(e.getMessage());
             return Response.noContent().build();

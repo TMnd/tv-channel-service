@@ -1,15 +1,10 @@
 package pt.amaral.service;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import pt.amaral.models.*;
 import pt.amaral.models.entities.CatShows;
-import pt.amaral.utils.EmbyClient;
 import pt.amaral.utils.Helper;
 import pt.amaral.utils.RandomizeFailError;
 
@@ -19,22 +14,32 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ApplicationScoped
 public class TvControllerService {
 
     private final AppConfiguration appConfiguration = AppConfiguration.getInstance();
 
-    public ShowResult processSelectedShow(List<CatShows> catShows) {
+    /**
+     * Process a random show from the list of shows
+     * @param lists: Vararg of list the type of CatShows
+     * @return: A show from the list
+     */
+    private ShowResult processSelectedShow(List<CatShows> ...lists) {
         ShowResult showResult = new ShowResult();
 
-        int index = Helper.randomValue(catShows.size());
+        List<CatShows> finalList = new ArrayList<>();
 
-        CatShows catShow = catShows.get(index);
+        for(List<CatShows> catShows: lists) {
+            if(catShows != null){
+                finalList.addAll(catShows);
+            }
+        }
+
+        int index = Helper.randomValue(finalList.size());
+
+        CatShows catShow = finalList.get(index);
 
         showResult.setName(catShow.getName());
         showResult.setPath(catShow.getPath());
@@ -69,28 +74,22 @@ public class TvControllerService {
 
         if(isLateNightSchedule(clientCurrentTime)) {
             Log.debug("Get random series");
-            if(CollectionUtils.isEmpty(tvShows)) {
-                isToRandomize = false;
-            } else {
+            if(CollectionUtils.isNotEmpty(tvShows)) {
                 selectedRandomShow = processSelectedShow(tvShows);
             }
         } else if(isLateDaySchedule(clientCurrentTime)) {
             Log.debug("Get random movie");
-            if(CollectionUtils.isEmpty(movies)) {
-                isToRandomize = false;
-            } else {
+            if(CollectionUtils.isNotEmpty(movies)) {
                 selectedRandomShow = processSelectedShow(movies);
             }
         } else if(isDayTimeSchedule(clientCurrentTime)) {
             Log.debug("Get random documentary or series");
-            if(CollectionUtils.isEmpty(documentary) && CollectionUtils.isEmpty(tvShows)) {
-                isToRandomize = false;
-            } else {
-                //selectedRandomShow = processSelectedShow(tvShows, documentary);
+            if(CollectionUtils.isNotEmpty(documentary) || CollectionUtils.isNotEmpty(tvShows)) {
+                selectedRandomShow = processSelectedShow(tvShows, documentary);
             }
         }
 
-        if(!isToRandomize){
+        if(selectedRandomShow == null){
             throw new RandomizeFailError("No show was selected");
         }
 
