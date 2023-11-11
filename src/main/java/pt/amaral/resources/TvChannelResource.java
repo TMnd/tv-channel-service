@@ -8,32 +8,26 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.apache.commons.collections4.CollectionUtils;
 import org.jboss.resteasy.reactive.RestQuery;
-import pt.amaral.models.Movie;
-import pt.amaral.models.ShowType;
-import pt.amaral.models.TvShow;
-import pt.amaral.models.entities.CatShows;
+import pt.amaral.models.ShowResult;
 import pt.amaral.service.TvControllerService;
-import pt.amaral.utils.Helper;
+import pt.amaral.utils.RandomizeFailError;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Map;
 
 @Path("/api/tv/")
 public class TvChannelResource {
 
     @Inject
-    TvControllerService tvController;
+    TvControllerService tvControllerService;
 
     @POST
     @Path("pause")
     @Produces(MediaType.APPLICATION_JSON)
     public Response pause() {
         try {
-            tvController.sendCommand("pause");
+            tvControllerService.sendCommand("pause");
             return Response.ok("Video paused").build();
         } catch (IOException e) {
             Log.error(e.getMessage());
@@ -46,7 +40,7 @@ public class TvChannelResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response resume() {
         try {
-            tvController.sendCommand("play");
+            tvControllerService.sendCommand("play");
             return Response.ok("Video resumed").build();
         } catch (IOException e) {
             Log.error(e.getMessage());
@@ -59,7 +53,7 @@ public class TvChannelResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response next() {
         try {
-            tvController.sendCommand("next");
+            tvControllerService.sendCommand("next");
             return Response.ok("Loading next video").build();
         } catch (IOException e) {
             Log.error(e.getMessage());
@@ -72,7 +66,7 @@ public class TvChannelResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response prev() {
         try {
-            tvController.sendCommand("prev");
+            tvControllerService.sendCommand("prev");
             return Response.ok("Loading previous video").build();
         } catch (IOException e) {
             Log.error(e.getMessage());
@@ -86,49 +80,18 @@ public class TvChannelResource {
     public Response random(@RestQuery ZonedDateTime clientCurrentTime) {
 
         System.out.println(clientCurrentTime);
-        boolean isToRandomize = true;
+
+        Log.info("Process random show.");
 
         try {
-            Log.info("Process random show.");
-
-            Map<String, List<CatShows>> allShows = tvController.getAllShows();
-            List<CatShows> movies = allShows.get(ShowType.MOVIES.toString());
-            List<CatShows> tvShows = allShows.get(ShowType.SERIES.toString());
-            List<CatShows> documentary = allShows.get(ShowType.DOCUMENTARY.toString());
-
-            if(clientCurrentTime.getHour() >= 8 && clientCurrentTime.getHour() < 16) {
-                Log.debug("Get random series");
-                if(CollectionUtils.isEmpty(tvShows)) {
-                    isToRandomize = false;
-                } else {
-                    tvController.processSelectedShow(tvShows);
-                }
-            } else if(clientCurrentTime.getHour() >= 16) {
-                Log.debug("Get random movie");
-                if(CollectionUtils.isEmpty(movies)) {
-                    isToRandomize = false;
-                } else {
-                    tvController.processSelectedShow(movies);
-                }
-            } else if(clientCurrentTime.getHour() > 0  && clientCurrentTime.getHour() <= 2) {
-                Log.debug("Get random documentary or series");
-                if(CollectionUtils.isEmpty(documentary) && CollectionUtils.isEmpty(tvShows)) {
-                    isToRandomize = false;
-                } else {
-
-                }
-            }
-
-            if(isToRandomize) {
-                return Response.ok().build();
-            }
-
-            return Response.noContent().build();
-
-        } catch (IOException e) {
+            ShowResult showResult = tvControllerService.selectRandomShow(clientCurrentTime);
+            Log.info("Show selected: " + showResult.getName());
+            return Response.ok().build();
+        } catch (RandomizeFailError e) {
             Log.error(e.getMessage());
-            return Response.serverError().build();
+            return Response.noContent().build();
         }
+
     }
 
 }

@@ -5,17 +5,20 @@ import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import pt.amaral.models.*;
 import pt.amaral.models.entities.CatShows;
 import pt.amaral.utils.EmbyClient;
 import pt.amaral.utils.Helper;
+import pt.amaral.utils.RandomizeFailError;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +51,57 @@ public class TvControllerService {
         return showResult;
     }
 
-    public Map<String, List<CatShows>> getAllShows() throws IOException {
+    /**
+     * Select a random show based of the client's time of request.
+     * @param clientCurrentTime Date of the requet in ISO 8601 format (Ex in UTC: 2023-11-11T07:19:01Z)
+     * @return ShowResult
+     * @throws RandomizeFailError: If for any reason, there aren't any shows to select
+     */
+    public ShowResult selectRandomShow(ZonedDateTime clientCurrentTime) throws RandomizeFailError {
+        boolean isToRandomize = true;
+
+        Map<String, List<CatShows>> allShows = getAllShows();
+        List<CatShows> movies = allShows.get(ShowType.MOVIES.toString());
+        List<CatShows> tvShows = allShows.get(ShowType.SERIES.toString());
+        List<CatShows> documentary = allShows.get(ShowType.DOCUMENTARY.toString());
+
+        ShowResult selectedRandomShow = null;
+
+        if(isLateNightSchedule(clientCurrentTime)) {
+            Log.debug("Get random series");
+            if(CollectionUtils.isEmpty(tvShows)) {
+                isToRandomize = false;
+            } else {
+                selectedRandomShow = processSelectedShow(tvShows);
+            }
+        } else if(isLateDaySchedule(clientCurrentTime)) {
+            Log.debug("Get random movie");
+            if(CollectionUtils.isEmpty(movies)) {
+                isToRandomize = false;
+            } else {
+                selectedRandomShow = processSelectedShow(movies);
+            }
+        } else if(isDayTimeSchedule(clientCurrentTime)) {
+            Log.debug("Get random documentary or series");
+            if(CollectionUtils.isEmpty(documentary) && CollectionUtils.isEmpty(tvShows)) {
+                isToRandomize = false;
+            } else {
+                //selectedRandomShow = processSelectedShow(tvShows, documentary);
+            }
+        }
+
+        if(!isToRandomize){
+            throw new RandomizeFailError("No show was selected");
+        }
+
+        return selectedRandomShow;
+    }
+
+    /**
+     * Get all "avaiable" shows in the data base
+     * @return A Map of the shows by the type of the show.
+     */
+    public Map<String, List<CatShows>> getAllShows() {
 
         CatShows catShows = new CatShows();
         List<CatShows> shows = (List<CatShows>) catShows.findAll();
@@ -85,6 +138,35 @@ public class TvControllerService {
                 break;
             }
         }
+    }
 
+    /**
+     * The current time is between 00H and 02H
+     * @param currentTime: Time to check
+     * @return true/false
+     */
+    public Boolean isLateNightSchedule(ZonedDateTime currentTime) {
+        Log.debug("Is late night.");
+        return currentTime.getHour() > 0  && currentTime.getHour() <= 2;
+    }
+
+    /**
+     * The current time is between 08H and 16H
+     * @param currentTime: Time to check
+     * @return true/false
+     */
+    public Boolean isDayTimeSchedule(ZonedDateTime currentTime) {
+        Log.debug("Is day time.");
+        return currentTime.getHour() >= 8 && currentTime.getHour() < 16;
+    }
+
+    /**
+     * The current time is between 16H and 00H
+     * @param currentTime: Time to check
+     * @return true/false
+     */
+    public Boolean isLateDaySchedule(ZonedDateTime currentTime) {
+        Log.debug("Is late day.");
+        return currentTime.getHour() >= 16;
     }
 }
