@@ -104,7 +104,7 @@ public class TvControllerService {
     public Map<String, List<CatShows>> getAllShows() {
 
         CatShows catShows = new CatShows();
-        List<CatShows> shows = (List<CatShows>) catShows.findAll();
+        List<CatShows> shows = catShows.findAll().list();
 
         Map<String, List<CatShows>> showMap = new HashMap<>();
 

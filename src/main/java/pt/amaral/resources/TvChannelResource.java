@@ -77,14 +77,12 @@ public class TvChannelResource {
     @GET
     @Path("nextShow")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response random(@RestQuery ZonedDateTime clientCurrentTime) {
-
-        System.out.println(clientCurrentTime);
+    public Response random(@RestQuery ZonedDateTime time) {
 
         Log.info("Process random show.");
 
         try {
-            ShowResult showResult = tvControllerService.selectRandomShow(clientCurrentTime);
+            ShowResult showResult = tvControllerService.selectRandomShow(time);
             Log.info("Show selected: " + showResult.getName());
             return Response.ok().build();
         } catch (RandomizeFailError e) {
