@@ -2,7 +2,7 @@ package pt.amaral.models;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
-@ApplicationScoped
+
 public class AppConfiguration {
     private static final AppConfiguration instance = new AppConfiguration();
 

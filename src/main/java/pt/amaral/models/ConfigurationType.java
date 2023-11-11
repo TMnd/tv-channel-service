@@ -1,5 +1,7 @@
 package pt.amaral.models;
 
+import org.apache.commons.lang3.StringUtils;
+
 public enum ConfigurationType {
     EMBY_TOKEN("emby-token"),
     EMBY_USER_UUID("emby-user-uuid"),
@@ -12,6 +14,15 @@ public enum ConfigurationType {
 
     ConfigurationType(String configurationName) {
         this.configurationName = configurationName;
+    }
+
+    public static ConfigurationType getEnumByName(String name) {
+        for (ConfigurationType configurationType : values()) {
+            if(StringUtils.equals(configurationType.configurationName, name)) {
+                return configurationType;
+            }
+        }
+        return null;
     }
 
     @Override
