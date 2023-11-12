@@ -5,6 +5,7 @@ CREATE TABLE cat_config (
 
 CREATE TABLE cat_shows (
     name text PRIMARY KEY,
+    series text,
     duration bigint,
     episode text,
 	season text,

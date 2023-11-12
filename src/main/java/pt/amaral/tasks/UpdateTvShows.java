@@ -45,7 +45,8 @@ public class UpdateTvShows {
         return catShows;
     }
 
-    @Scheduled(cron="0 0 * * 3 ?")
+//    @Scheduled(cron="0 0 * * 3 ?")
+    @Scheduled(every="200s")
     @Transactional
     void createShowsCatalog() {
         Log.info("Updating the show catalog");
@@ -84,6 +85,7 @@ public class UpdateTvShows {
                         catShows.setEpisode(tvShow.getEpisode());
                         catShows.setSeason(tvShow.getSeason());
                         catShows.setType(tvShow.getType());
+                        catShows.setSeries(tvShow.getShowName());
 
                         catShows.persist();
                     }

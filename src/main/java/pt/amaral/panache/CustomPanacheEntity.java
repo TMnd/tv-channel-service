@@ -1,4 +1,4 @@
-package pt.amaral.models.entities;
+package pt.amaral.panache;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.EntityManager;
