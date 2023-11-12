@@ -12,6 +12,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import pt.amaral.models.Movie;
 import pt.amaral.models.ShowType;
 import pt.amaral.models.TvShow;
+import pt.amaral.models.entities.CatCustomShowsTypes;
 import pt.amaral.models.entities.CatShows;
 import pt.amaral.utils.EmbyClient;
 
@@ -45,7 +46,11 @@ public class UpdateTvShows {
         return catShows;
     }
 
-    @Scheduled(cron="0 0 * * 3 ?")
+    private CatCustomShowsTypes getCustomType(String name) {
+        return CatCustomShowsTypes.findById(name);
+    }
+
+    @Scheduled(every="200s")
     @Transactional
     void createShowsCatalog() {
         Log.info("Updating the show catalog");
@@ -78,15 +83,26 @@ public class UpdateTvShows {
                 for (TvShow tvShow : tvShows) {
                     if(BooleanUtils.isTrue(tvShow.getHasPlayed())){
                         catShows = new CatShows();
-                        catShows.setName(tvShow.getName());
+                        String name = tvShow.getName();
+
+                        catShows.setName(name);
                         catShows.setDuration(tvShow.getTimeAsMicroseconds() / DIVIDE_TICKS_TO_SECOND);
                         catShows.setPath(tvShow.getPath());
                         catShows.setEpisode(tvShow.getEpisode());
                         catShows.setSeason(tvShow.getSeason());
-                        catShows.setType(tvShow.getType());
                         catShows.setSeries(tvShow.getShowName());
 
+                        String type = tvShow.getType();
+
+                        CatCustomShowsTypes customType = getCustomType(name);
+                        if(customType != null) {
+                            type = customType.getCustomType();
+                        }
+
+                        catShows.setType(type);
+
                         catShows.persist();
+
                     }
                 }
             }
