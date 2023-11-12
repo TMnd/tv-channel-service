@@ -68,6 +68,7 @@ public class TvControllerService {
         Map<String, List<CatShows>> allShows = getAllShows();
         List<CatShows> movies = allShows.get(ShowType.MOVIES.toString());
         List<CatShows> tvShows = allShows.get(ShowType.SERIES.toString());
+        List<CatShows> animatedTvShows = allShows.get(ShowType.ANIMATED_SERIES.toString());
         List<CatShows> documentary = allShows.get(ShowType.DOCUMENTARY.toString());
 
         ShowResult selectedRandomShow = null;
@@ -84,8 +85,22 @@ public class TvControllerService {
             }
         } else if(isDayTimeSchedule(clientCurrentTime)) {
             Log.debug("Get random documentary or series");
-            if(CollectionUtils.isNotEmpty(documentary) || CollectionUtils.isNotEmpty(tvShows)) {
-                selectedRandomShow = processSelectedShow(tvShows, documentary);
+            if(CollectionUtils.isNotEmpty(documentary) ||
+                    CollectionUtils.isNotEmpty(tvShows) ||
+                    CollectionUtils.isNotEmpty(animatedTvShows)
+            ) {
+
+                List<CatShows> mergedSeries = new ArrayList<>();
+
+                if(CollectionUtils.isNotEmpty(tvShows)) {
+                    mergedSeries.addAll(tvShows);
+                }
+
+                if(CollectionUtils.isNotEmpty(animatedTvShows)) {
+                    mergedSeries.addAll(animatedTvShows);
+                }
+
+                selectedRandomShow = processSelectedShow(mergedSeries, documentary);
             }
         }
 

@@ -83,18 +83,19 @@ public class UpdateTvShows {
                 for (TvShow tvShow : tvShows) {
                     if(BooleanUtils.isTrue(tvShow.getHasPlayed())){
                         catShows = new CatShows();
-                        String name = tvShow.getName();
 
-                        catShows.setName(name);
+                        catShows.setName(tvShow.getName());
                         catShows.setDuration(tvShow.getTimeAsMicroseconds() / DIVIDE_TICKS_TO_SECOND);
                         catShows.setPath(tvShow.getPath());
                         catShows.setEpisode(tvShow.getEpisode());
                         catShows.setSeason(tvShow.getSeason());
-                        catShows.setSeries(tvShow.getShowName());
+
+                        String showName = tvShow.getShowName();
+                        catShows.setSeries(showName);
 
                         String type = tvShow.getType();
 
-                        CatCustomShowsTypes customType = getCustomType(name);
+                        CatCustomShowsTypes customType = getCustomType(showName);
                         if(customType != null) {
                             type = customType.getCustomType();
                         }
