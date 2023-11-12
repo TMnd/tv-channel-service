@@ -4,6 +4,7 @@ public enum ShowType {
     MOVIES("Movie", "3230"),
     SERIES("Series","4042"),
     DOCUMENTARY("Documentary","5487"),
+    ANIMATED_SERIES("Animated Series",""),
     EPISODE("Episode","");
 
     private String name;
