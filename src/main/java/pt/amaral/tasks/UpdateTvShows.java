@@ -50,78 +50,83 @@ public class UpdateTvShows {
         return CatCustomShowsTypes.findById(name);
     }
 
-    @Scheduled(every="200s")
     @Transactional
-    void createShowsCatalog() {
+    public void processUpdate() throws IOException {
         Log.info("Updating the show catalog");
+
+        Map<String, Object> shows = embyClient.executeShows();
+
+        List<Movie> movies = (List<Movie>) shows.get(ShowType.MOVIES.toString());
+        List<TvShow> tvShows = (List<TvShow>) shows.get(ShowType.SERIES.toString());
+        List<Movie> documentaries = (List<Movie>) shows.get(ShowType.DOCUMENTARY.toString());
+
+        Log.debug("Clean the table from existing data.");
+        CatShows catShows = new CatShows();
+        cleanShows(catShows);
+
+        Log.debug("Insert movies");
+
+        if(CollectionUtils.isNotEmpty(movies)) {
+            for (Movie movie : movies) {
+                if(BooleanUtils.isTrue(movie.getHasPlayed())) {
+                    catShows = createMoviesCatShows(movie);
+
+                    catShows.persist();
+                }
+            }
+        }
+
+        Log.debug("Insert series");
+
+        if(CollectionUtils.isNotEmpty(tvShows)) {
+            for (TvShow tvShow : tvShows) {
+                if(BooleanUtils.isTrue(tvShow.getHasPlayed())){
+                    catShows = new CatShows();
+
+                    catShows.setName(tvShow.getName());
+                    catShows.setDuration(tvShow.getTimeAsMicroseconds() / DIVIDE_TICKS_TO_SECOND);
+                    catShows.setPath(tvShow.getPath());
+                    catShows.setEpisode(tvShow.getEpisode());
+                    catShows.setSeason(tvShow.getSeason());
+
+                    String showName = tvShow.getShowName();
+                    catShows.setSeries(showName);
+
+                    String type = tvShow.getType();
+
+                    CatCustomShowsTypes customType = getCustomType(showName);
+                    if(customType != null) {
+                        type = customType.getCustomType();
+                    }
+
+                    catShows.setType(type);
+
+                    catShows.persist();
+
+                }
+            }
+        }
+
+        Log.debug("Insert documentaries");
+
+        if(CollectionUtils.isNotEmpty(documentaries)) {
+            for (Movie movie : documentaries) {
+                if(BooleanUtils.isTrue(movie.getHasPlayed())){
+                    catShows = createMoviesCatShows(movie);
+
+                    catShows.persist();
+                }
+            }
+        }
+
+        Log.info("Updating done");
+    }
+
+    @Scheduled(cron="0 0 * * 3 ?")
+    @Transactional
+    public void createShowsCatalog() {
         try {
-            Map<String, Object> shows = embyClient.executeShows();
-
-            List<Movie> movies = (List<Movie>) shows.get(ShowType.MOVIES.toString());
-            List<TvShow> tvShows = (List<TvShow>) shows.get(ShowType.SERIES.toString());
-            List<Movie> documentaries = (List<Movie>) shows.get(ShowType.DOCUMENTARY.toString());
-
-            Log.debug("Clean the table from existing data.");
-            CatShows catShows = new CatShows();
-            cleanShows(catShows);
-
-            Log.debug("Insert movies");
-
-            if(CollectionUtils.isNotEmpty(movies)) {
-                for (Movie movie : movies) {
-                    if(BooleanUtils.isTrue(movie.getHasPlayed())) {
-                        catShows = createMoviesCatShows(movie);
-
-                        catShows.persist();
-                    }
-                }
-            }
-
-            Log.debug("Insert series");
-
-            if(CollectionUtils.isNotEmpty(tvShows)) {
-                for (TvShow tvShow : tvShows) {
-                    if(BooleanUtils.isTrue(tvShow.getHasPlayed())){
-                        catShows = new CatShows();
-
-                        catShows.setName(tvShow.getName());
-                        catShows.setDuration(tvShow.getTimeAsMicroseconds() / DIVIDE_TICKS_TO_SECOND);
-                        catShows.setPath(tvShow.getPath());
-                        catShows.setEpisode(tvShow.getEpisode());
-                        catShows.setSeason(tvShow.getSeason());
-
-                        String showName = tvShow.getShowName();
-                        catShows.setSeries(showName);
-
-                        String type = tvShow.getType();
-
-                        CatCustomShowsTypes customType = getCustomType(showName);
-                        if(customType != null) {
-                            type = customType.getCustomType();
-                        }
-
-                        catShows.setType(type);
-
-                        catShows.persist();
-
-                    }
-                }
-            }
-
-            Log.debug("Insert documentaries");
-
-            if(CollectionUtils.isNotEmpty(documentaries)) {
-                for (Movie movie : documentaries) {
-                    if(BooleanUtils.isTrue(movie.getHasPlayed())){
-                        catShows = createMoviesCatShows(movie);
-
-                        catShows.persist();
-                    }
-                }
-            }
-
-            Log.info("Updating done");
-
+            processUpdate();
         } catch (IOException e) {
             Log.error("Fail to update show catalog", e);
         }
