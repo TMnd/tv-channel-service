@@ -1,6 +1,6 @@
 package pt.amaral.utils;
 
-import com.arjuna.ats.internal.arjuna.Header;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.io.BufferedReader;
@@ -13,6 +13,8 @@ import java.util.Map;
 @ApplicationScoped
 public class HttpClient {
     public String get(String url, Map<String, String> headers) throws IOException {
+        Log.info("URL: " + url);
+
         URL requestUrl = new URL(url);
 
         HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
@@ -26,6 +28,8 @@ public class HttpClient {
         }
 
         int responseCode = connection.getResponseCode();
+
+        Log.debug("Response code: " + responseCode);
 
         if (responseCode == 200) {
             InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());

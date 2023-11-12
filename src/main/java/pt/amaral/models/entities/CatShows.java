@@ -15,6 +15,7 @@ public class CatShows extends PanacheEntityBase {
     private String season;
     private String type;
     private String path;
+    private String series;
 
     public CatShows() {}
 
@@ -64,5 +65,13 @@ public class CatShows extends PanacheEntityBase {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSeries() {
+        return series;
+    }
+
+    public void setSeries(String series) {
+        this.series = series;
     }
 }

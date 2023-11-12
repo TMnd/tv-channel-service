@@ -3,6 +3,7 @@ package pt.amaral.models.entities;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import pt.amaral.panache.CustomPanacheEntity;
 
 import java.util.HashMap;
 import java.util.List;

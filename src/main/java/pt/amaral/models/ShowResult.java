@@ -6,6 +6,7 @@ public class ShowResult {
     private Long duration;
     private String episode;
     private String season;
+    private String seriesName;
 
     public ShowResult() {}
 
@@ -47,5 +48,13 @@ public class ShowResult {
 
     public void setSeason(String season) {
         this.season = season;
+    }
+
+    public String getSeriesName() {
+        return seriesName;
+    }
+
+    public void setSeriesName(String seriesName) {
+        this.seriesName = seriesName;
     }
 }
