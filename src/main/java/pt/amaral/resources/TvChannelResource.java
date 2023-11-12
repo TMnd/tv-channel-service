@@ -2,10 +2,7 @@ package pt.amaral.resources;
 
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.reactive.RestQuery;
@@ -15,6 +12,7 @@ import pt.amaral.utils.RandomizeFailError;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
+import java.util.Map;
 
 @Path("/api/tv/")
 public class TvChannelResource {
@@ -92,4 +90,18 @@ public class TvChannelResource {
 
     }
 
+    @PUT
+    @Path("updateCatalog")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update() {
+
+        try {
+            tvControllerService.forceUpdateShowCatalog();
+            return Response.ok("Catalog updated").build();
+        } catch (IOException e) {
+            Log.error("Fail to update show catalog", e);
+            return Response.serverError().build();
+        }
+
+    }
 }

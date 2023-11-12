@@ -2,9 +2,11 @@ package pt.amaral.service;
 
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.apache.commons.collections4.CollectionUtils;
 import pt.amaral.models.*;
 import pt.amaral.models.entities.CatShows;
+import pt.amaral.tasks.UpdateTvShows;
 import pt.amaral.utils.Helper;
 import pt.amaral.utils.RandomizeFailError;
 
@@ -20,6 +22,9 @@ import java.util.*;
 public class TvControllerService {
 
     private final AppConfiguration appConfiguration = AppConfiguration.getInstance();
+
+    @Inject
+    UpdateTvShows updateTvShows;
 
     /**
      * Process a random show from the list of shows
@@ -63,8 +68,6 @@ public class TvControllerService {
      * @throws RandomizeFailError: If for any reason, there aren't any shows to select
      */
     public ShowResult selectRandomShow(ZonedDateTime clientCurrentTime) throws RandomizeFailError {
-        boolean isToRandomize = true;
-
         Map<String, List<CatShows>> allShows = getAllShows();
         List<CatShows> movies = allShows.get(ShowType.MOVIES.toString());
         List<CatShows> tvShows = allShows.get(ShowType.SERIES.toString());
@@ -130,6 +133,11 @@ public class TvControllerService {
         return showMap;
     }
 
+    /**
+     * Command send to the tv controller using telnet
+     * @param command The command
+     * @throws IOException In case the socker communication fails
+     */
     public void sendCommand(String command) throws IOException {
         Log.debug("Send command to client: " + command);
 
@@ -182,5 +190,9 @@ public class TvControllerService {
     public Boolean isLateDaySchedule(ZonedDateTime currentTime) {
         Log.debug("Is late day.");
         return currentTime.getHour() >= 16;
+    }
+
+    public void forceUpdateShowCatalog() throws IOException {
+        updateTvShows.processUpdate();
     }
 }
