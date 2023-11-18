@@ -50,7 +50,7 @@ public class UpdateTvShows {
         return CatCustomShowsTypes.findById(name);
     }
 
-    @Scheduled(every="200s")
+    @Scheduled(cron="0 0 * * 3 ?")
     @Transactional
     void createShowsCatalog() {
         Log.info("Updating the show catalog");
