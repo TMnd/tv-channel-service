@@ -1,5 +1,3 @@
-#source $PWD/../buildFiles/files/configurator.properties
-
 docker build \
   --build-arg DB_USER_NAME=${DB_USER_NAME} \
   --build-arg DB_USER_PASSWORD=${DB_USER_PASSWORD} \
@@ -10,8 +8,6 @@ docker build \
   --build-arg GELF_HOST=${GELF_HOST} \
   --build-arg GELF_PORT=${GELF_PORT} \
   --build-arg GELF_FACILITY=${GELF_FACILITY} \
-  -f $PWD/docker/Dockerfile-backend \
+  -f $PWD/docker/Dockerfile \
   -t quarkus/tv-channel-service \
-  ..
-
-ARG DB_TYPE
+  .
