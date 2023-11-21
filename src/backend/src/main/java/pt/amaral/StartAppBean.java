@@ -32,30 +32,17 @@ public class StartAppBean {
             String config = configuration.getConfiguration();
 
             switch (name) {
-                case EMBY_TOKEN:
-                    appConfiguration.setEmbyServerApiToken(config);
-                    break;
-                case EMBY_SERVER_URL:
-                    appConfiguration.setEmbyServerHost(config);
-                    break;
-                case EMBY_USER_UUID:
-                    appConfiguration.setEmbyServerDefaultUserUUID(config);
-                    break;
-                case VLC_ADDRESS:
-                    appConfiguration.setVlcAddress(config);
-                    break;
-                case VLC_PORT:
-                    appConfiguration.setVlcPort(NumberUtils.toInt(config));
-                    break;
-                case VLC_PASSWORD:
-                    appConfiguration.setVlcPassword(config);
-                    break;
-                default:
-                    Log.info("Base configuration not found!");
+                case EMBY_TOKEN -> appConfiguration.setEmbyServerApiToken(config);
+                case EMBY_SERVER_URL -> appConfiguration.setEmbyServerHost(config);
+                case EMBY_USER_UUID -> appConfiguration.setEmbyServerDefaultUserUUID(config);
+                case VLC_ADDRESS -> appConfiguration.setVlcAddress(config);
+                case VLC_PORT -> appConfiguration.setVlcPort(NumberUtils.toInt(config));
+                case VLC_PASSWORD -> appConfiguration.setVlcPassword(config);
+                default -> Log.info("Base configuration not found!");
             }
         }
 
-        System.out.println(appConfiguration.toString());
+        Log.info("Configuration set: " + appConfiguration.toString());
     }
 
     @Startup

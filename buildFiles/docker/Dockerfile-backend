@@ -1,5 +1,5 @@
 ####
-# This Dockerfile is used in order to build a container that runs the Quarkus application in native (no JVM) mode.
+# This Dockerfile-backend is used in order to build a container that runs the Quarkus application in native (no JVM) mode.
 #
 # Before building the container image run:
 #
@@ -7,13 +7,31 @@
 #
 # Then, build the image with:
 #
-# docker build -f buildFiles/docker/Dockerfile -t quarkus/tv-channel-service .
+# docker build -f buildFiles/docker/Dockerfile-backend -t quarkus/tv-channel-service .
 #
 # Then run the container using:
 #
 # docker run -i --rm -p 8080:8080 quarkus/tv-channel-service
 #
 ###
+
+FROM registry.access.redhat.com/ubi8/openjdk-17:1.17
+
+ENV LANGUAGE='en_US:en'
+
+WORKDIR /opt/amaral-software/tv-channel-service/
+
+COPY --chown=185 src/backend/target/quarkus-app/lib /opt/amaral-software/tv-channel-service/lib/
+COPY --chown=185 src/backend/target/quarkus-app/*.jar /opt/amaral-software/tv-channel-service/
+COPY --chown=185 src/backend/target/quarkus-app/app/ /opt/amaral-software/tv-channel-service/app/
+COPY --chown=185 src/backend/target/quarkus-app/quarkus/ /opt/amaral-software/tv-channel-service/quarkus/
+COPY --chown=185 conf/ /opt/amaral-software/tv-channel-service/config/
+COPY --chown=185 bin/backend/ /opt/amaral-software/tv-channel-service/bin/
+
+RUN chmod +x /opt/amaral-software/tv-channel-service/bin/start.sh
+
+EXPOSE 8080
+USER 185
 
 ARG DB_TYPE
 ARG DB_USER_NAME
@@ -24,11 +42,8 @@ ARG DB_SCHEMA
 ARG GELF_ENABLE
 ARG GELF_HOST
 ARG GELF_PORT
-ARG GELF_FACILITY
+ARG GELF_FACILIT
 
-FROM registry.access.redhat.com/ubi8/openjdk-17:1.17
-
-ENV LANGUAGE='en_US:en'
 ENV DB_TYPE=$DB_TYPE
 ENV DB_USER_NAME=$DB_USER_NAME
 ENV DB_USER_PASSWORD=$DB_USER_PASSWORD
@@ -40,19 +55,6 @@ ENV GELF_HOST=$GELF_HOST
 ENV GELF_PORT=$GELF_PORT
 ENV GELF_FACILITY=$GELF_FACILITY
 
-WORKDIR /opt/amaral-software/tv-channel-service
-
-COPY --chown=185 $PWD/../../target/quarkus-app/lib/ /opt/amaral-software/tv-channel-service/lib/
-COPY --chown=185 $PWD/../../target/quarkus-app/*.jar /opt/amaral-software/tv-channel-service/
-COPY --chown=185 $PWD/../../target/quarkus-app/app/ /opt/amaral-software/tv-channel-service/app/
-COPY --chown=185 $PWD/../../target/quarkus-app/quarkus/ /opt/amaral-software/tv-channel-service/quarkus/
-COPY --chown=185 $PWD/../../config/ /opt/amaral-software/tv-channel-service/config
-COPY --chown=185 $PWD/../../bin/ /opt/amaral-software/tv-channel-service/bin
-
-RUN chmod +x /opt/amaral-software/tv-channel-service/bin/start.sh
-
-EXPOSE 8080
-USER 185
 ENV JAVA_OPTS_APPEND="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 ENV JAVA_OPTS_APPEND="-Dquarkus.config.locations=/opt/amaral-software/tv-channel-service/config/application.properties"
 ENV JAVA_APP_JAR="/opt/amaral-software/tv-channel-service/quarkus-run.jar"
