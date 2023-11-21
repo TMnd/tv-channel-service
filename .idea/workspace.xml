@@ -5,44 +5,55 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ab2e3f76-a6a9-4fc0-91da-bef15f0b935c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/bin/backend/start.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/docker-backend-run.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/buildFiles/docker/Dockerfile-backend" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/tv-channel-service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tv-channel-service.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/automation/files/configurator.properties" beforeDir="false" afterPath="$PROJECT_DIR$/buildFiles/files/configurator.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/start.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/backend/start.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bin/backend/start.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/docker-backend-run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bin/docker-backend-run.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/buildFiles/createImage.sh" beforeDir="false" afterPath="$PROJECT_DIR$/buildFiles/createImage.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/buildFiles/docker/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/application.properties.SAMPLE" beforeDir="false" afterPath="$PROJECT_DIR$/conf/application.properties.SAMPLE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/StartAppBean.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/models/AppConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/models/ConfigurationType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/models/Movie.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/models/Show.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/models/ShowResult.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/models/ShowType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/models/TvShow.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/models/entities/CatCustomShowsTypes.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/models/entities/CatShows.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/models/entities/Configuration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/panache/CustomPanacheEntity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/resources/TvChannelResource.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/service/TvControllerService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/tasks/UpdateTvShows.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/utils/EmbyClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/utils/Helper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/utils/HttpClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pt/amaral/utils/RandomizeFailError.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/resources/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/1.0.0/V1.0.0_1__Init_table.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/1.0.0/V1.0.0_2__create_custom_show_type.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildFiles/docker/Dockerfile-backend" beforeDir="false" afterPath="$PROJECT_DIR$/buildFiles/docker/Dockerfile-backend" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildFiles/files/configurator.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/application.properties.SAMPLE" beforeDir="false" afterPath="$PROJECT_DIR$/conf/application.properties.SAMPLE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/mvnw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/mvnw.cmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/StartAppBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/StartAppBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/AppConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/AppConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/ConfigurationType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/ConfigurationType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/Movie.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/Movie.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/Show.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/Show.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/ShowResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/ShowResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/ShowType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/ShowType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/TvShow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/TvShow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/entities/CatCustomShowsTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/entities/CatCustomShowsTypes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/entities/CatShows.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/entities/CatShows.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/entities/Configuration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/models/entities/Configuration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/panache/CustomPanacheEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/panache/CustomPanacheEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/resources/TvChannelResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/resources/TvChannelResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/service/TvControllerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/service/TvControllerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/tasks/UpdateTvShows.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/tasks/UpdateTvShows.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/utils/EmbyClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/utils/EmbyClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/utils/Helper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/utils/Helper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/utils/HttpClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/utils/HttpClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/utils/RandomizeFailError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/java/pt/amaral/utils/RandomizeFailError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/resources/META-INF/resources/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/resources/META-INF/resources/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/resources/db/1.0.0/V1.0.0_1__Init_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/resources/db/1.0.0/V1.0.0_1__Init_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/src/main/resources/db/1.0.0/V1.0.0_2__create_custom_show_type.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/src/main/resources/db/1.0.0/V1.0.0_2__create_custom_show_type.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/target/classes/META-INF/resources/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/target/classes/META-INF/resources/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/target/classes/application.properties.SAMPLE" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/target/classes/application.properties.SAMPLE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/target/classes/db/1.0.0/V1.0.0_1__Init_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/target/classes/db/1.0.0/V1.0.0_1__Init_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/target/classes/db/1.0.0/V1.0.0_2__create_custom_show_type.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/target/classes/db/1.0.0/V1.0.0_2__create_custom_show_type.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/target/maven-status/maven-compiler-plugin/compile/null/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/target/maven-status/maven-compiler-plugin/compile/null/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/target/quarkus-app/quarkus-app-dependencies.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/target/quarkus-app/quarkus-app-dependencies.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/backend/target/quarkus-artifact.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/backend/target/quarkus-artifact.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,11 +102,11 @@
       <recent name="C:\Users\TMind\Documents\GitHub\tv-channel-service\src\main\resources\scripts\intermission" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\TMind\Documents\GitHub\tv-channel-service\bin" />
       <recent name="C:\Users\TMind\Documents\GitHub\tv-channel-service\bin\backend" />
       <recent name="C:\Users\TMind\Documents\GitHub\tv-channel-service\buildFiles" />
       <recent name="C:\Users\TMind\Documents\GitHub\tv-channel-service\src\docker" />
       <recent name="C:\Users\TMind\Documents\GitHub\tv-channel-service\src" />
-      <recent name="C:\Users\TMind\Documents\GitHub\tv-channel-service" />
     </key>
   </component>
   <component name="RunManager">
