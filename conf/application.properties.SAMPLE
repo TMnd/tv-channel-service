@@ -1,9 +1,9 @@
 # Database
-quarkus.datasource.db-kind={{ DB_TYPE }}
-quarkus.datasource.username={{ DB_USER_NAME }}
-quarkus.datasource.password={{ DB_USER_PASSWORD }}
+quarkus.datasource.db-kind={{DB_TYPE}}
+quarkus.datasource.username={{DB_USER_NAME}}
+quarkus.datasource.password={{DB_USER_PASSWORD}}
 
-quarkus.datasource.jdbc.url=jdbc:{{ DB_TYPE }}://{{ DB_HOST_URL }}/{{ DB_SCHEMA}}?currentSchema={{DB_SCHEMA}}
+quarkus.datasource.jdbc.url=jdbc:{{DB_TYPE}}://{{DB_HOST_URL}}/{{DB_DATABASE}}?currentSchema={{DB_SCHEMA}}
 
 # Flyway
 quarkus.flyway.migrate-at-start=true
@@ -21,6 +21,6 @@ quarkus.log.category."pt.amaral".level=DEBUG
 quarkus.log.handler.gelf.enabled={{GELF_ENABLE}}
 quarkus.log.handler.gelf.host={{GELF_HOST}}
 quarkus.log.handler.gelf.port={{GELF_PORT}}
-quarkus.log.handler.gelf.facility=tvchannel_service_backend
+quarkus.log.handler.gelf.facility={{GELF_FACILITY}}
 quarkus.log.handler.gelf.additional-field.service_version.value=1.0.0
 quarkus.log.handler.gelf.additional-field.service_version.type=String

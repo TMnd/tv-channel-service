@@ -1,0 +1,39 @@
+####
+# This Dockerfile-backend is used in order to build a container that runs the Quarkus application in native (no JVM) mode.
+#
+# Before building the container image run:
+#
+# ./mvnw package
+#
+# Then, build the image with:
+#
+# docker build -f buildFiles/docker/Dockerfile-backend -t quarkus/tv-channel-service .
+#
+# Then run the container using:
+#
+# docker run -i --rm -p 8080:8080 quarkus/tv-channel-service
+#
+###
+
+FROM registry.access.redhat.com/ubi8/openjdk-17:1.17
+
+ENV LANGUAGE='en_US:en'
+
+WORKDIR /opt/amaral-software/tv-channel-service/
+
+COPY --chown=185 src/backend/target/quarkus-app/lib /opt/amaral-software/tv-channel-service/lib/
+COPY --chown=185 src/backend/target/quarkus-app/*.jar /opt/amaral-software/tv-channel-service/
+COPY --chown=185 src/backend/target/quarkus-app/app/ /opt/amaral-software/tv-channel-service/app/
+COPY --chown=185 src/backend/target/quarkus-app/quarkus/ /opt/amaral-software/tv-channel-service/quarkus/
+COPY --chown=185 conf/ /opt/amaral-software/tv-channel-service/config/
+COPY --chown=185 bin/backend/ /opt/amaral-software/tv-channel-service/bin/
+
+RUN chmod +x /opt/amaral-software/tv-channel-service/bin/start.sh
+
+EXPOSE 8080
+USER 185
+
+ENV JAVA_OPTS_APPEND="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+ENV JAVA_APP_JAR="/opt/amaral-software/tv-channel-service/quarkus-run.jar"
+
+ENTRYPOINT ["/opt/amaral-software/tv-channel-service/bin/start.sh"]
