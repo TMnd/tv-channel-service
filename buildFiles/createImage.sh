@@ -19,7 +19,7 @@ while getopts 'pm:e:h' flag; do
   esac
 done
 
-create_image():wq
+create_image()
 {
     start='date +%s'
 
