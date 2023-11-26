@@ -1,8 +1,7 @@
 MODULES=("./docker/Dockerfile-backend")
 
 #print_usage
-print_usage()
-{
+print_usage() {
     echo "options are:"
     echo "-p to push images default false"
     echo "-m modules separated by commam default are ${ALL_MODULES[@]}"
@@ -19,8 +18,7 @@ while getopts 'pm:e:h' flag; do
   esac
 done
 
-create_image():wq
-{
+create_image() {
     start=$(date +%s)
 
     MODULE=$(echo $1 |sed  "s/.*docker\/Dockerfile-//")
