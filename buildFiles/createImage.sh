@@ -21,9 +21,9 @@ done
 
 create_image():wq
 {
-    start='date +%s'
+    start=$(date +%s)
 
-    MODULE='echo $1 |sed  "s/.*docker\/Dockerfile-//"'
+    MODULE=$(echo $1 |sed  "s/.*docker\/Dockerfile-//")
     IMAGE_NAME=${MODULE}
 
     docker build \
@@ -35,7 +35,7 @@ create_image():wq
         docker tag tv-channel-service:1.0.0 10.10.0.222:5000/tv-channel-service:1.0.0
         docker push 10.10.0.222:5000/tv-channel-service:1.0.0
     fi
-    end="date +%s"
+    end=(date +%s)
     echo "$IMAGE_NAME took: $( echo "$end - $start" | bc -l )s"
 }
 
