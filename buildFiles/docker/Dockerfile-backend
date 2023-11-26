@@ -25,7 +25,6 @@ COPY --chown=185 src/backend/target/quarkus-app/lib /opt/amaral-software/tv-chan
 COPY --chown=185 src/backend/target/quarkus-app/*.jar /opt/amaral-software/tv-channel-service/
 COPY --chown=185 src/backend/target/quarkus-app/app/ /opt/amaral-software/tv-channel-service/app/
 COPY --chown=185 src/backend/target/quarkus-app/quarkus/ /opt/amaral-software/tv-channel-service/quarkus/
-COPY --chown=185 conf/ /opt/amaral-software/tv-channel-service/config/
 COPY --chown=185 bin/backend/ /opt/amaral-software/tv-channel-service/bin/
 
 RUN chmod +x /opt/amaral-software/tv-channel-service/bin/start.sh

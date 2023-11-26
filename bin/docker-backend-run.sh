@@ -1,5 +1,3 @@
-source ./files/configurator.properties
-
 docker run -i --rm \
   -p 8080:8080 \
   -e DB_HOST_URL=${DB_USER_NAME} \
@@ -13,4 +11,4 @@ docker run -i --rm \
   -e GELF_HOST=${GELF_HOST} \
   -e GELF_PORT=${GELF_PORT} \
   -e GELF_FACILITY=${GELF_FACILITY} \
-  quarkus/tv-channel-service
+  10.10.0.222:5000/tv-channel-service:1.0.0
