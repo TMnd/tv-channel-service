@@ -2,7 +2,7 @@
 # This Dockerfile-backend is used in order to build a container that runs the Quarkus application in native (no JVM) mode.
 #
 # Before building the container image run:
-#
+#  mvn -N wrapper:wrapper
 # ./mvnw package
 #
 # Then, build the image with:
