@@ -1,8 +1,18 @@
 #! /bin/sh
 
-serviceUrl=localhost
-servicePort=8080
+currentTime=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 timeOfStart=0
+randomShowEndPoint="http://10.10.0.222:8080/api/tv/nextShow?time=$currentTime"
+httpStatusCode=""
+
+# show structure
+name="" #: "Angry Video Game Nerd: The Movie"
+path="" # "/mnt/disk1/Videos/Filmes/Angry Video Game Nerd The Movie.mp4",
+duration="" #: 6890,
+episode="" # null
+season="" # null,
+seriesName="" # null
+
 
 STATE_GET_VIDEO="get"
 STATE_INTERMISSION="intermission"
@@ -50,8 +60,7 @@ get_current_hour() {
 
 set_time_of_start() {
     day_of_week=$(date +%u)
-    
-    echo "0"
+
     
     case $day_of_week in
         1|2|3|4|5)
@@ -64,13 +73,25 @@ set_time_of_start() {
 
 }
 
+get_random_show() {
+    json_response=$(curl -s -w "\n%{http_code}" $randomShowEndPoint)
+    echo $json_response
+    httpStatusCode=$(echo "$json_response" | tail -n 1)
+    name=$(echo "$json_response" | jq -r '.name')
+    path=$(echo "$json_response" | jq -r '.path')
+    duration=$(echo "$json_response" | jq -r '.duration')
+    episode=$(echo "$json_response" | jq -r '.episode')
+    season=$(echo "$json_response" | jq -r '.season')
+    seriesName=$(echo "$json_response" | jq -r '.seriesName')
+}
+
 # Function to transition to the next state
 transition_state() {
     case $1 in
         $STATE_CHECK_TIME)
-            echo "Current time: " $(get_current_hour)
+            echo "Current time: " $(get_current_hour) H
             set_time_of_start
-            echo "Today's starting time: " $timeOfStart
+            echo "Today's starting time: " $timeOfStart H
             if [ $(get_current_hour) -ge 16 ]; then
                 echo "get video info"
                 current_state=$STATE_GET_VIDEO
@@ -80,8 +101,20 @@ transition_state() {
             fi
             ;;
         $STATE_GET_VIDEO)
-            echo "Show intermission"
-            current_state=$STATE_INTERMISSION
+            get_random_show
+            if [ $httpStatusCode -eq 200 ]; then
+                echo "Show intermission"
+                echo $name
+                echo $path
+                echo $duration
+                echo $episode
+                echo $season
+                echo $seriesName
+                current_state=$STATE_INTERMISSION
+            else
+                echo "go to offline state"
+                current_state=$STATE_OFFLINE
+            fi
             ;;
         $STATE_INTERMISSION)
             echo "Show episode/movie"
