@@ -1,4 +1,4 @@
-from .States import STATE_CHECK_TIME
+from states.States import STATE_CHECK_TIME
 
 class TVController(object):
     def __init__(self) -> None:

@@ -5,7 +5,7 @@ class MainState(object):
     """
 
     def __init__(self):
-        print("Processing current state:", str(self))
+        print("Start workflow")
 
     def on_event(self, event):
         """
