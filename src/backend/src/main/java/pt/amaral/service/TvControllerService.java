@@ -169,7 +169,7 @@ public class TvControllerService {
      */
     public Boolean isLateNightSchedule(ZonedDateTime currentTime) {
         Log.debug("Is late night.");
-        return currentTime.getHour() > 0  && currentTime.getHour() <= 2;
+        return  currentTime.getHour() == 0 || currentTime.getHour() <= 2;
     }
 
     /**
