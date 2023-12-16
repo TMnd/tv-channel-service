@@ -1,3 +1,5 @@
+import subprocess
+import psutil
 import time, requests, json
 from .MainState import MainState
 from datetime import datetime
@@ -6,13 +8,13 @@ class STATE_CHECK_TIME(MainState):
     """
     Check if is late night, between midnight and 2 am
     """
-    def isLateTime(currentHour):
+    def isLateTime(self, currentHour: int):
         return (currentHour >= 0 and currentHour <= 2)
 
     """
     Check if is time to show anything
     """
-    def isTimeToShow(self, currentHour):
+    def isTimeToShow(self, currentHour: int):
         current_datetime = datetime.now()
         current_day_of_week = current_datetime.weekday()
 
@@ -57,9 +59,10 @@ class STATE_GET_VIDEO(MainState):
         time.sleep(2)
         try:
             currentTime = STATE_GET_VIDEO.getCurrentTimeUtc()
-            url = "http://10.10.0.222:8080/api/tv/nextShow?time="+str(currentTime)
-            print(url)
+            url = "http://localhost:8080/api/tv/nextShow?time="+str(currentTime)
             response = requests.get(url)
+
+            print(response)
 
             if response.status_code == 200:
                 STATE_INTERMISSION.on_event(self, response.text)
@@ -88,13 +91,28 @@ class STATE_INTERMISSION(MainState):
         return self
 
 class STATE_SHOW(MainState):
+    def is_vlc_running():
+        for process in psutil.process_iter(['pid', 'name']):
+            if 'vlc' in process.info['name'].lower():
+                return True
+        return False
+
     """
     Show the requestes show/movie
     """
     def on_event(self, event):
         print(" - Current state: STATE_SHOW")
-        time.sleep(2)
-        STATE_GET_VIDEO.on_event(self, None)
+
+        # URL or path to the media file you want to play
+        media_url = "..\video.mp4"  # or "C:\\path\\to\\your\\file.mp4"
+
+        command = ["vlc", "--play-and-exit", media_url]
+
+        # Use subprocess to execute the command in the command line
+        subprocess.run(command)
+
+#        time.sleep(2)
+#        STATE_GET_VIDEO.on_event(self, None)
         return self
 
 class STATE_OFFLINE(MainState):
