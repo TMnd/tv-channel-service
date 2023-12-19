@@ -1,4 +1,4 @@
-class MainState(object):
+class State(object):
     """
     We define a state object which provides some utility functions for the
     individual states within the state machine.
