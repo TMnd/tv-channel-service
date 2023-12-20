@@ -1,9 +1,9 @@
-from model.TVController import TVController
+from src.tvcontroller.model.Controller import TVController
 
 
 def main():
-    tvController = TVController()
-    tvController.on_event(None)
+    tvcontroller = TVController()
+    tvcontroller.on_event(None)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 import subprocess
 import psutil
-import time, requests, json
+import time, requests, json, vlc
 from .MainState import State
 from datetime import datetime
 
@@ -10,6 +10,34 @@ def is_vlc_running():
         if 'vlc' in process.info['name'].lower():
             return True
     return False
+
+def runVlc(media, showdata, showtime):
+
+    # Create VLC instance
+    instance = vlc.Instance('--no-xlib')
+
+    # Create media player
+    media_player = instance.media_player_new()
+
+    # Set marquee text with line break
+    media_player.video_set_marquee_int(vlc.VideoMarqueeOption.Enable, 1)
+    media_player.video_set_marquee_string(vlc.VideoMarqueeOption.Text, showdata+"\n\r\n"+showtime)
+    media_player.video_set_marquee_int(vlc.VideoMarqueeOption.Y, 550)
+    media_player.video_set_marquee_int(vlc.VideoMarqueeOption.X, 100)
+
+    # Load media
+    media = instance.media_new(media)
+    media.get_mrl()
+    media_player.set_media(media)
+
+    # Play the media
+    media_player.play()
+
+    # Wait for the media to finish
+    time.sleep(30)  # Adjust as needed
+
+    # Release the media player
+    media_player.release()
 
 
 class StateCheckTime(State):
@@ -97,20 +125,23 @@ class StateIntermission(State):
         print(" - Current state: STATE_INTERMISSION")
         data = json.loads(event)
         videoPath = data["path"]
-        print(data["duration"])
-        print(data["seriesName"])
-        print(data["episode"])
-        print(data["season"])
+        seriesName = data["seriesName"]
+        duration = data["duration"]
+        episode = data["episode"]
+        season = data["season"]
 
-        # URL or path to the media file you want to play
-        media_url = "C:\\Users\\TMind\\Documents\\GitHub\\tv-channel-service\\src\\tvcontroller\\intermission.mp4"  # or "C:\\path\\to\\your\\file.mp4"
+        showinfo = "Coming up next, we have.. "
 
-        command = ["C:\\Program Files\\VideoLAN\\VLC\\vlc.exe", "--play-and-exit", media_url]
+        if episode!=None and season!=None:
+            showinfo += seriesName + "Season: " + season + " - Episode: " + episode
+        else:
+            showinfo += seriesName
 
-        # Use subprocess to execute the command in the command line
-        subprocess.run(command)
+        showtime = "It is scheduled to finish by" + duration;
 
-        time.sleep(2)
+        runVlc("intermission.mp4", showinfo, showtime)
+
+        time.sleep(1)
 
         if is_vlc_running:
             StateShow.on_event(self, videoPath)
