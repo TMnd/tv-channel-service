@@ -97,9 +97,7 @@ class StateGetVideo(State):
         time.sleep(2)
         try:
             currentTime = StateGetVideo.getCurrentTimeUtc(self)
-            url = "http://localhost:8080/api/tv/nextShow?time=" + str(currentTime)
-
-            url = "http://localhost:8080/api/tv/nextShow?time=2023-12-19T20:54:40Z"
+            url = "http://10.10.0.222:8080/api/tv/nextShow?time=" + str(currentTime)
 
             response = requests.get(url)
 
@@ -171,7 +169,7 @@ class StateShow(State):
 
         contextPath = "/mnt/media/Filmes/" + tail
 
-        command = ["vlc", "--play-and-exit", contextPath]
+        command = ["vlc", "--play-and-exit", "--fullscreen", contextPath]
 
         # Use subprocess to execute the command in the command line
         subprocess.run(command)
