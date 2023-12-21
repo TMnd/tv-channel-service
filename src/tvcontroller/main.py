@@ -1,4 +1,4 @@
-from src.tvcontroller.model.Controller import TVController
+from model.Controller import TVController
 
 
 def main():

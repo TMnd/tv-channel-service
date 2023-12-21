@@ -1,4 +1,4 @@
-from ..states.States import StateCheckTime
+from states.States import StateCheckTime
 
 
 class TVController(object):

@@ -2,7 +2,7 @@ import subprocess
 import psutil
 import time, requests, json, vlc
 from .MainState import State
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def is_vlc_running():
@@ -11,7 +11,7 @@ def is_vlc_running():
             return True
     return False
 
-def runVlc(media, showdata, showtime):
+def runVlc(media, showdata, showtime, xValue, yValue):
 
     # Create VLC instance
     instance = vlc.Instance('--no-xlib')
@@ -22,8 +22,9 @@ def runVlc(media, showdata, showtime):
     # Set marquee text with line break
     media_player.video_set_marquee_int(vlc.VideoMarqueeOption.Enable, 1)
     media_player.video_set_marquee_string(vlc.VideoMarqueeOption.Text, showdata+"\n\r\n"+showtime)
-    media_player.video_set_marquee_int(vlc.VideoMarqueeOption.Y, 550)
-    media_player.video_set_marquee_int(vlc.VideoMarqueeOption.X, 100)
+    media_player.video_set_marquee_int(vlc.VideoMarqueeOption.Y, int(yValue))
+    media_player.video_set_marquee_int(vlc.VideoMarqueeOption.X, int(xValue))
+    media_player.video_set_marquee_int(vlc.VideoMarqueeOption.Size, 45)
 
     # Load media
     media = instance.media_new(media)
@@ -54,16 +55,16 @@ class StateCheckTime(State):
         current_datetime = datetime.now()
         current_day_of_week = current_datetime.weekday()
 
-        match current_day_of_week:
-            case 0, 1, 2, 3, 4:
-                print(" -- It's week day")
-                if current_hour >= 16 or StateCheckTime.isLateTime(self, current_hour):
-                    return True
-            case _:
-                print(" -- It's weekend")
-                if current_hour >= 8 or StateCheckTime.isLateTime(self, current_hour):
-                    return True
-                return False
+        if current_day_of_week in {0, 1, 2, 3, 4}:
+            print(" -- It's a weekday")
+            if current_hour >= 16 or StateCheckTime.isLateTime(self, current_hour):
+                return True
+        elif current_day_of_week in {5, 6}:
+            print(" -- It's the weekend")
+            if current_hour >= 8 or StateCheckTime.isLateTime(self, current_hour):
+                return True
+        
+        return False
 
     """
     Check if the current time is correct to show any episodes/moveis based of the week day
@@ -73,7 +74,7 @@ class StateCheckTime(State):
         time.sleep(3)
         currentHour = datetime.now().hour
         if self.isTimeToShow(currentHour):
-            StateGetVideo.on_event(self, None)
+            StateGetVideo.on_event(StateIntermission, None)
         else:
             StateOffline.on_event(self, None)
         return self
@@ -117,6 +118,11 @@ class StateGetVideo(State):
 
 
 class StateIntermission(State):
+    def calculateendingtime(self, duration):
+        current_datetime = datetime.now()
+        newdate = current_datetime + timedelta(seconds=duration)
+        return newdate.replace(microsecond=0)
+
     """
     Show intermission beetwen shows
     """
@@ -124,22 +130,24 @@ class StateIntermission(State):
     def on_event(self, event):
         print(" - Current state: STATE_INTERMISSION")
         data = json.loads(event)
+        print(data)
         videoPath = data["path"]
+        name = data["name"]
         seriesName = data["seriesName"]
         duration = data["duration"]
         episode = data["episode"]
         season = data["season"]
 
-        showinfo = "Coming up next, we have.. "
+        showinfo = "Coming up next, we have... \n\r\n"
 
         if episode!=None and season!=None:
-            showinfo += seriesName + "Season: " + season + " - Episode: " + episode
+            showinfo += str(seriesName) + "\n\nSeason: " + str(season) + " - Episode: " + str(episode) + "\n => " + str(name) + " <="
         else:
-            showinfo += seriesName
+            showinfo += str(name)
 
-        showtime = "It is scheduled to finish by" + duration;
+        showtime = "It is scheduled to finish by " + str(self.calculateendingtime(self,int(duration)+30))
 
-        runVlc("intermission.mp4", showinfo, showtime)
+        runVlc("intermission.mp4", showinfo, showtime, 600, 525)
 
         time.sleep(1)
 
@@ -159,9 +167,11 @@ class StateShow(State):
     def on_event(self, video_path):
         print(" - Current state: STATE_SHOW")
 
-        print(video_path)
+        head, tail = video_path.rsplit('/', 1)
 
-        command = ["vlc", "--play-and-exit", video_path]
+        contextPath = "/mnt/media/Filmes/" + tail
+
+        command = ["vlc", "--play-and-exit", contextPath]
 
         # Use subprocess to execute the command in the command line
         subprocess.run(command)
