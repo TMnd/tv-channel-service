@@ -49,13 +49,14 @@ public class TvControllerService {
         showResult.setName(catShow.getName());
         showResult.setPath(catShow.getPath());
         showResult.setDuration(catShow.getDuration());
+        showResult.setSeriesName(catShow.getSeries());
 
         String episode = catShow.getEpisode();
         String season = catShow.getSeason();
 
         if(episode != null && season != null) {
             showResult.setEpisode(episode);
-            showResult.setSeason(episode);
+            showResult.setSeason(season);
         }
 
         return showResult;
